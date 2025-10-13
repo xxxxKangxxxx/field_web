@@ -1,0 +1,87 @@
+# Dependencies
+node_modules/
+/.pnp
+.pnp.js
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build outputs
+dist
+dist-ssr
+build
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Frontend specific
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+frontend/.cache/
+
+# Backend specific
+server/node_modules/
+server/dist/
+server/build/
+
+# Uploads (사용자가 업로드한 파일들)
+server/uploads/**/*
+!server/uploads/.gitkeep
+
+# Coverage
+coverage
+*.lcov
+.nyc_output
+
+# Testing
+.jest
+
+# Misc
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Lock files (선택적으로 주석 처리)
+# package-lock.json
+# pnpm-lock.yaml
+# yarn.lock
+
