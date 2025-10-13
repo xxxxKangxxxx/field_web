@@ -1,0 +1,9 @@
+@font-face {
+	font-family: 'Goblin One';
+	src: url('../fonts/goblin_one.eot'); /* IE 9 Compatibility Mode */
+	src: url('../fonts/goblin_one.eot?#iefix') format('embedded-opentype'), /* IE < 9 */
+		url('../fonts/goblin_one.woff2') format('woff2'), /* Super Modern Browsers */
+		url('../fonts/goblin_one.woff') format('woff'), /* Firefox >= 3.6, any other modern browser */
+		url('../fonts/goblin_one.ttf') format('truetype'), /* Safari, Android, iOS */
+		url('../fonts/goblin_one.svg#goblin_one') format('svg'); /* Chrome < 4, Legacy iOS */
+}
