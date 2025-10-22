@@ -1,0 +1,16 @@
+# server-nestjs/Dockerfile.dev
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# devDependencies를 포함한 모든 의존성 설치
+COPY package*.json ./
+RUN npm ci && npm cache clean --force
+
+# 소스 코드는 volumes로 연결되므로 여기서 복사하지 않음
+
+EXPOSE 4002
+
+# NestJS 개발 서버 실행
+CMD ["npm", "run", "start:dev"]
