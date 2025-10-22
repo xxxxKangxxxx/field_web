@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { CampsModule } from './camps/camps.module';
 import { NewsModule } from './news/news.module';
+import { RecruitsModule } from './recruits/recruits.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { NewsModule } from './news/news.module';
     AuthModule,
     CampsModule,
     NewsModule,
+    RecruitsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -48,9 +48,19 @@ server/node_modules/
 server/dist/
 server/build/
 
+# Nest.js specific
+server-nestjs/node_modules/
+server-nestjs/dist/
+server-nestjs/build/
+server-nestjs/.env
+server-nestjs/.env.local
+
 # Uploads (사용자가 업로드한 파일들)
 server/uploads/**/*
 !server/uploads/.gitkeep
+
+# Docker
+docker-compose.override.yml
 
 # Coverage
 coverage
