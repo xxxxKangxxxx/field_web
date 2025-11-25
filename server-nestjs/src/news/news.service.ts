@@ -16,9 +16,11 @@ export class NewsService {
   /**
    * 모든 뉴스 조회 (생성일 내림차순)
    */
-  async findAll(): Promise<any[]> {
+  async findAll(category?: string): Promise<any[]> {
+    const filter = category ? { category } : {};
+    
     const newsList = await this.newsModel
-      .find()
+      .find(filter)
       .sort({ createdAt: -1 })
       .populate('author', 'name department')
       .exec();

@@ -10,6 +10,11 @@ import { AuthModule } from './auth/auth.module';
 import { CampsModule } from './camps/camps.module';
 import { NewsModule } from './news/news.module';
 import { RecruitsModule } from './recruits/recruits.module';
+import { ContactsModule } from './contacts/contacts.module';
+import { InquiriesModule } from './inquiries/inquiries.module';
+import { ReviewsModule } from './reviews/reviews.module';
+import { ProfilesModule } from './profiles/profiles.module';
+import { QuestionsModule } from './questions/questions.module';
 
 @Module({
   imports: [
@@ -34,6 +39,11 @@ import { RecruitsModule } from './recruits/recruits.module';
     CampsModule,
     NewsModule,
     RecruitsModule,
+    ContactsModule,
+    InquiriesModule,
+    ReviewsModule,
+    ProfilesModule,
+    QuestionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

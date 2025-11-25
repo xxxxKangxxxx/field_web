@@ -15,7 +15,7 @@ import {
   import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
   import { AdminGuard } from '../auth/guards/admin.guard';
   
-  @Controller('recruits')
+  @Controller(['recruits', 'recruit'])
   export class RecruitsController {
     constructor(private readonly recruitsService: RecruitsService) {}
   
@@ -24,7 +24,7 @@ import {
      * GET /recruits
      * 공개 API (인증 불필요)
      */
-    @Get()
+    @Get(['', 'all'])
     async findAll() {
       return this.recruitsService.findAll();
     }

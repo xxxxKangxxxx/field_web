@@ -7,6 +7,7 @@ import {
     Delete,
     Body,
     Param,
+    Query,
     UseGuards,
     UseInterceptors,
     UploadedFile,
@@ -36,8 +37,8 @@ import {
      * 공개 API (인증 불필요)
      */
     @Get()
-    async findAll() {
-      return this.newsService.findAll();
+    async findAll(@Query('category') category?: string) {
+      return this.newsService.findAll(category);
     }
   
     /**

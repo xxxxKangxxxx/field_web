@@ -6,10 +6,15 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.setGlobalPrefix('api')
+
   // CORS 설정 (프론트엔드와 통신)
   app.enableCors({
-    origin: ['http://localhost:5173', 'http://localhost:3000'],
-    credentials: true,
+    origin: [
+      'http://localhost:5173', 
+      'http://localhost:3000',
+      'https://iefield.com',
+      'https://www.iefield.com'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
