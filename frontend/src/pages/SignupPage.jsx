@@ -538,6 +538,7 @@ const SignupPage = () => {
               value={formData.password}
               onChange={handleChange}
               placeholder="비밀번호를 입력하세요"
+              autoComplete="new-password"
               required
             />
           </InputGroup>
@@ -550,6 +551,7 @@ const SignupPage = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               placeholder="비밀번호를 다시 입력하세요"
+              autoComplete="new-password"
               required
             />
           </InputGroup>
