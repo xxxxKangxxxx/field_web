@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import axios from 'axios';
+import api from '../../api/axios';
 import { useSelector } from 'react-redux';
 
 const EditorContainer = styled.div`
@@ -226,7 +226,7 @@ const NewsEditor = () => {
     if (id) {
       const fetchNews = async () => {
         try {
-          const response = await axios.get(`http://localhost:4002/api/news/${id}`);
+          const response = await api.get(`/api/news/${id}`);
           const news = response.data;
           setFormData({
             title: news.title,
@@ -310,14 +310,14 @@ const NewsEditor = () => {
       const token = auth?.token || localStorage.getItem('token');
 
       if (id) {
-        await axios.put(`http://localhost:4002/api/news/${id}`, formDataToSend, {
+        await api.put(`/api/news/${id}`, formDataToSend, {
           headers: {
             'Content-Type': 'multipart/form-data',
             ...(token && { Authorization: `Bearer ${token}` }),
           },
         });
       } else {
-        await axios.post('http://localhost:4002/api/news', formDataToSend, {
+        await api.post('/api/news', formDataToSend, {
           headers: {
             'Content-Type': 'multipart/form-data',
             ...(token && { Authorization: `Bearer ${token}` }),

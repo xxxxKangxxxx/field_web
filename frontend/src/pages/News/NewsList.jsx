@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import axios from 'axios';
+import api from '../../api/axios';
 import { useSelector } from 'react-redux';
 
 const NewsListContainer = styled.div`
@@ -233,7 +233,7 @@ const NewsList = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await axios.get('http://localhost:4002/api/news');
+        const response = await api.get('/api/news');
         setNews(response.data);
       } catch (error) {
         console.error('뉴스 목록을 불러오는데 실패했습니다:', error);
@@ -265,11 +265,10 @@ const NewsList = () => {
           throw new Error('인증 토큰이 없습니다.');
         }
 
-        await axios.delete(`http://localhost:4002/api/news/${id}`, {
+        await api.delete(`/api/news/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`
-          },
-          withCredentials: true
+          }
         });
 
         setNews(news.filter(item => item._id !== id));

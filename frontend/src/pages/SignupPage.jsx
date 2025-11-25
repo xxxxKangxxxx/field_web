@@ -1,6 +1,6 @@
 // src/pages/RegisterPage.jsx
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -195,7 +195,7 @@ const SignupPage = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:4002/api/auth/register', 
+      const response = await api.post('/api/auth/register', 
         {
           email: formData.email,
           name: formData.name,

@@ -15,6 +15,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'https://iefield.com',
       'https://www.iefield.com'],
+    credentials: true, // withCredentials: true 요청 허용
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   });

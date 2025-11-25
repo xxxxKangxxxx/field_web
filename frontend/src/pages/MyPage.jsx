@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axios';
 import { setCredentials } from '../redux/authSlice';
 
 const Container = styled.div`
@@ -239,8 +239,8 @@ const MyPage = () => {
         updateData.password = formData.password;
       }
 
-      const response = await axios.put(
-        'http://localhost:4002/api/users/profile',
+      const response = await api.put(
+        '/api/users/profile',
         updateData,
         {
           headers: {
