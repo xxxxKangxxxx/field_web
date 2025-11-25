@@ -11,6 +11,8 @@ import {
   import { Request as ExpressRequest } from 'express'; // 👈 [수정 1] Express의 Request 타입 임포트
   import { AuthService } from './auth.service';
   import { RegisterDto, LoginDto } from './dto';
+  import { SendVerificationDto } from './dto/send-verification.dto';
+  import { VerifyEmailDto } from './dto/verify-email.dto';
   import { JwtAuthGuard } from './guards';
   import { JwtPayload } from './strategies/jwt.strategy'; // 👈 [수정 2] Strategy의 Payload 타입 임포트
   
@@ -22,6 +24,24 @@ import {
   @Controller('auth')
   export class AuthController {
     constructor(private authService: AuthService) {}
+
+    /**
+     * 인증번호 발송
+     * POST /auth/send-verification
+     */
+    @Post('send-verification')
+    async sendVerification(@Body() sendVerificationDto: SendVerificationDto) {
+      return this.authService.sendVerification(sendVerificationDto.email);
+    }
+
+    /**
+     * 인증번호 확인
+     * POST /auth/verify-email
+     */
+    @Post('verify-email')
+    async verifyEmail(@Body() verifyEmailDto: VerifyEmailDto) {
+      return this.authService.verifyEmail(verifyEmailDto.email, verifyEmailDto.code);
+    }
   
     /**
      * 회원가입

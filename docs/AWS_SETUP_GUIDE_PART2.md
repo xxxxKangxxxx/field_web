@@ -295,6 +295,25 @@ NODE_ENV=$(aws ssm get-parameter \
   --query "Parameter.Value" \
   --output text)
 
+# Email Provider 설정 (SES)
+EMAIL_PROVIDER=$(aws ssm get-parameter \
+  --name "/field/prod/email-provider" \
+  --region $AWS_REGION \
+  --query "Parameter.Value" \
+  --output text)
+
+AWS_SES_REGION=$(aws ssm get-parameter \
+  --name "/field/prod/aws-ses-region" \
+  --region $AWS_REGION \
+  --query "Parameter.Value" \
+  --output text)
+
+AWS_SES_FROM_EMAIL=$(aws ssm get-parameter \
+  --name "/field/prod/aws-ses-from-email" \
+  --region $AWS_REGION \
+  --query "Parameter.Value" \
+  --output text)
+
 echo "✅ 환경변수 로드 완료"
 
 # ECR 로그인 (IAM 역할 자동 사용)
@@ -324,6 +343,9 @@ docker run -d \
   -e JWT_EXPIRES_IN="7d" \
   -e AWS_REGION="$AWS_REGION" \
   -e AWS_S3_BUCKET_NAME="$S3_BUCKET_NAME" \
+  -e EMAIL_PROVIDER="$EMAIL_PROVIDER" \
+  -e AWS_SES_REGION="$AWS_SES_REGION" \
+  -e AWS_SES_FROM_EMAIL="$AWS_SES_FROM_EMAIL" \
   --log-driver=awslogs \
   --log-opt awslogs-group=/aws/ec2/field-nestjs \
   --log-opt awslogs-region=$AWS_REGION \

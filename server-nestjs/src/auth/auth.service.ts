@@ -6,6 +6,8 @@ import {
   } from '@nestjs/common';
   import { JwtService } from '@nestjs/jwt';
   import { UsersService } from '../users/users.service';
+  import { EmailService } from '../email/email.service';
+  import { VerificationService } from './verification.service';
   import { RegisterDto, LoginDto } from './dto';
   import { UserDocument } from '../users/schemas/user.schema';
   
@@ -14,13 +16,63 @@ import {
     constructor(
       private usersService: UsersService,
       private jwtService: JwtService,
+      private emailService: EmailService,
+      private verificationService: VerificationService,
     ) {}
   
+    /**
+     * 인증번호 발송
+     */
+    async sendVerification(email: string) {
+      // 이미 가입된 이메일인지 확인
+      const existingUser = await this.usersService.findByEmail(email);
+      if (existingUser) {
+        throw new BadRequestException('이미 가입된 이메일입니다.');
+      }
+
+      // 인증번호 생성
+      const code = this.emailService.generateVerificationCode();
+
+      // 인증번호 저장
+      await this.verificationService.createVerification(email, code);
+
+      // 이메일 발송
+      await this.emailService.sendVerificationEmail(email, code);
+
+      return {
+        message: '인증번호가 발송되었습니다.',
+      };
+    }
+
+    /**
+     * 인증번호 확인
+     */
+    async verifyEmail(email: string, code: string) {
+      const isValid = await this.verificationService.verifyCode(email, code);
+      
+      if (isValid) {
+        return {
+          message: '이메일 인증이 완료되었습니다.',
+          verified: true,
+        };
+      }
+
+      throw new BadRequestException('인증번호가 일치하지 않습니다.');
+    }
+
     /**
      * 회원가입
      */
     async register(registerDto: RegisterDto) {
+      // 이메일 인증 확인
+      if (!(await this.verificationService.isVerified(registerDto.email))) {
+        throw new BadRequestException('이메일 인증을 완료해주세요.');
+      }
+
       const user = await this.usersService.create(registerDto);
+
+      // 인증 정보 삭제
+      await this.verificationService.deleteVerification(registerDto.email);
   
       return {
         message: '회원가입이 완료되었습니다.',

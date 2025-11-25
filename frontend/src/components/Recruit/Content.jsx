@@ -147,8 +147,8 @@ export default function Content() {
       const response = await LoadDateData();
       // response가 null이면 활성 모집이 없는 경우
       if (response) {
-        dateDataLocalStored(response);
-        setDateData(response);
+      dateDataLocalStored(response);
+      setDateData(response);
       } else {
         // 활성 모집이 없을 때는 빈 데이터로 설정
         setDateData(null);
