@@ -526,6 +526,7 @@ const SignupPage = () => {
               value={formData.name}
               onChange={handleChange}
               placeholder="이름을 입력하세요"
+              autoComplete="name"
               required
             />
           </InputGroup>
