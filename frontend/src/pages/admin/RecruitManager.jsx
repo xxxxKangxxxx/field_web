@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import axios from '../../api/axios';
+import api from '../../api/axios';
 import theme from '../../theme';
 
 const Container = styled.div`
@@ -120,7 +120,7 @@ export default function RecruitManager() {
 
   const fetchSchedules = async () => {
     try {
-      const response = await axios.get('/api/recruit/all');
+      const response = await api.get('/api/recruit/all');
       setSchedules(response.data);
     } catch (error) {
       setError('일정을 불러오는데 실패했습니다.');
@@ -166,7 +166,7 @@ export default function RecruitManager() {
     setError(null);
 
     try {
-      await axios.post('/api/recruit', formData);
+      await api.post('/api/recruit', formData);
       await fetchSchedules();
       setFormData({
         year: new Date().getFullYear(),
@@ -185,7 +185,7 @@ export default function RecruitManager() {
     if (!window.confirm('정말로 이 일정을 삭제하시겠습니까?')) return;
 
     try {
-      await axios.delete(`/api/recruit/${id}`);
+      await api.delete(`/api/recruit/${id}`);
       await fetchSchedules();
     } catch (error) {
       setError('일정 삭제에 실패했습니다.');
@@ -194,7 +194,7 @@ export default function RecruitManager() {
 
   const handleToggleActive = async (id, currentActive) => {
     try {
-      await axios.patch(`/api/recruit/${id}`, {
+      await api.put(`/api/recruit/${id}`, {
         isActive: !currentActive
       });
       await fetchSchedules();

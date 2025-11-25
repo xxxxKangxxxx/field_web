@@ -145,8 +145,14 @@ export default function Content() {
     setIsLoading(true);
     try {
       const response = await LoadDateData();
-      dateDataLocalStored(response);
-      setDateData(response);
+      // response가 null이면 활성 모집이 없는 경우
+      if (response) {
+        dateDataLocalStored(response);
+        setDateData(response);
+      } else {
+        // 활성 모집이 없을 때는 빈 데이터로 설정
+        setDateData(null);
+      }
       setIsLoading(false);
     } catch {
       setIsError(true);
@@ -176,7 +182,7 @@ export default function Content() {
     );
   } else if (isLoading) {
     recruitmentContent = <LoadingSpin />;
-  } else if (dateData && dateData.schedules) {
+  } else if (dateData && dateData.schedules && dateData.schedules.length > 0) {
     recruitmentContent = (
       <>
         {dateData.schedules.map((schedule, index) => (
@@ -190,6 +196,7 @@ export default function Content() {
       </>
     );
   } else {
+    // dateData가 null이거나 schedules가 없을 때
     recruitmentContent = (
       <P>현재 진행 중인 모집이 없습니다.</P>
     );

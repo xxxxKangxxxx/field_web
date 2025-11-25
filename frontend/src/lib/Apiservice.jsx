@@ -67,6 +67,11 @@ export async function LoadDateData() {
     console.log('모집 일정 데이터 응답:', response.data);
     return response.data;
   } catch (error) {
+    // 404 에러는 "활성 모집이 없음"을 의미하므로 정상적인 경우로 처리
+    if (error.response?.status === 404) {
+      console.log('현재 진행 중인 모집이 없습니다.');
+      return null; // 또는 빈 객체 { schedules: [] }
+    }
     console.error('모집 일정 데이터 조회 실패:', error);
     throw error;
   }
