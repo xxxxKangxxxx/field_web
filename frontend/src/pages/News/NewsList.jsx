@@ -233,7 +233,7 @@ const NewsList = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await axios.get('http://localhost:4001/api/news');
+        const response = await axios.get('http://localhost:4002/api/news');
         setNews(response.data);
       } catch (error) {
         console.error('뉴스 목록을 불러오는데 실패했습니다:', error);
@@ -265,7 +265,7 @@ const NewsList = () => {
           throw new Error('인증 토큰이 없습니다.');
         }
 
-        await axios.delete(`http://localhost:4001/api/news/${id}`, {
+        await axios.delete(`http://localhost:4002/api/news/${id}`, {
           headers: {
             'Authorization': `Bearer ${token}`
           },

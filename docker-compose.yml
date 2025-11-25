@@ -46,7 +46,7 @@ services:
     networks:
       - field-network
 
-    # ========================================
+  # ========================================
   # Backend - Nest.js (신규)
   # ========================================
   backend:
@@ -57,18 +57,16 @@ services:
     restart: unless-stopped
     ports:
       - "4002:4002"
-    
-    # 👇 이 부분을 추가
     env_file:
       - ./server-nestjs/.env
-    
     environment:
       NODE_ENV: development
       PORT: 4002
-      MONGO_URI: mongodb://admin:admin123@mongodb:27017/field_db?authSource=admin
-      JWT_SECRET: field-dev-secret-key-2025
-      JWT_EXPIRES_IN: 7d
-    
+      # ❌ [주석 처리] 로컬 MongoDB 사용 시 주석 해제
+      # MONGO_URI: mongodb://admin:admin123@mongodb:27017/field_db?authSource=admin
+      # ❌ [주석 처리] .env 파일의 설정을 사용하도록 주석 처리
+      # JWT_SECRET: field-dev-secret-key-2025
+      # JWT_EXPIRES_IN: 7d
     volumes:
       - ./server-nestjs:/app
       - /app/node_modules
@@ -78,31 +76,6 @@ services:
     networks:
       - field-network
     command: npm run start:dev
-
-  # ========================================
-  # Backend Legacy - Express (기존)
-  # ========================================
-  backend-legacy:
-    build:
-      context: ./server
-      dockerfile: Dockerfile
-    container_name: field-backend-express
-    restart: unless-stopped
-    ports:
-      - "4001:4001"
-    environment:
-      NODE_ENV: development
-      PORT: 4001
-      MONGO_URI: mongodb://admin:admin123@mongodb:27017/field_db?authSource=admin
-    volumes:
-      - ./server:/app
-      - ./server/uploads:/app/uploads
-      - /app/node_modules
-    depends_on:
-      mongodb:
-        condition: service_healthy
-    networks:
-      - field-network
 
   # ========================================
   # Frontend - React (Vite)
@@ -124,7 +97,6 @@ services:
       - /app/node_modules
     depends_on:
       - backend
-      - backend-legacy
     networks:
       - field-network
     command: npm run dev -- --host 0.0.0.0

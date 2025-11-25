@@ -5,7 +5,7 @@ import theme from '../../theme';
 import Button from '../Button';
 import {setCampTitle} from '../../redux/campTitleSlice';
 import Dropdown from '../Dropdown';
-import Timeline from '../Timeline';
+import Timeline from '../TimeLine';
 
 const Section = styled.section`
   display: flex;

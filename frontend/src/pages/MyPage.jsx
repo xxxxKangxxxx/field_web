@@ -240,7 +240,7 @@ const MyPage = () => {
       }
 
       const response = await axios.put(
-        'http://localhost:4001/api/users/profile',
+        'http://localhost:4002/api/users/profile',
         updateData,
         {
           headers: {

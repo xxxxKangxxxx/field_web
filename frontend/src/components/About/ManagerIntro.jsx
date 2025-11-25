@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 // 프로필 이미지 import
-import leaderImg from '../../assets/profiles/leader.png';
+import leaderImg from '../../assets/profiles/profile_example.png';
 
 const MainSection = styled.section`
   margin: 7.5%;

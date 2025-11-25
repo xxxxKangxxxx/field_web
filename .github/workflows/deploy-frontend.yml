@@ -41,7 +41,7 @@ jobs:
       # 4. React 앱 빌드
       - name: Build React app
         env:
-          VITE_API_URL: https://new-api.iefield.com # 프로덕션 API URL
+          VITE_API_URL: https://api.iefield.com # 프로덕션 API URL
           NODE_ENV: production
         run: |
           cd frontend

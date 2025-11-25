@@ -226,7 +226,7 @@ const NewsEditor = () => {
     if (id) {
       const fetchNews = async () => {
         try {
-          const response = await axios.get(`http://localhost:4001/api/news/${id}`);
+          const response = await axios.get(`http://localhost:4002/api/news/${id}`);
           const news = response.data;
           setFormData({
             title: news.title,
@@ -310,14 +310,14 @@ const NewsEditor = () => {
       const token = auth?.token || localStorage.getItem('token');
 
       if (id) {
-        await axios.put(`http://localhost:4001/api/news/${id}`, formDataToSend, {
+        await axios.put(`http://localhost:4002/api/news/${id}`, formDataToSend, {
           headers: {
             'Content-Type': 'multipart/form-data',
             ...(token && { Authorization: `Bearer ${token}` }),
           },
         });
       } else {
-        await axios.post('http://localhost:4001/api/news', formDataToSend, {
+        await axios.post('http://localhost:4002/api/news', formDataToSend, {
           headers: {
             'Content-Type': 'multipart/form-data',
             ...(token && { Authorization: `Bearer ${token}` }),
