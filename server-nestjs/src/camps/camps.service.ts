@@ -103,7 +103,6 @@ export class CampsService {
     } catch (error) {
       // DB 저장 실패 시 업로드된 S3 파일 삭제 (롤백)
       await this.uploadService.deleteFile(key);
-      console.error('캠프 생성 실패:', error);
       throw new Error('캠프 생성 중 오류가 발생했습니다.'); // 또는 더 구체적인 에러
     }
   }
@@ -176,7 +175,6 @@ export class CampsService {
       if (posterFile && newPosterKey !== camp.posterImageKey) {
         await this.uploadService.deleteFile(newPosterKey);
       }
-      console.error('캠프 수정 실패:', error);
       throw new Error('캠프 수정 중 오류가 발생했습니다.'); // 또는 더 구체적인 에러
     }
   }

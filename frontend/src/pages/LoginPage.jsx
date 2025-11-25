@@ -141,7 +141,6 @@ const LoginPage = () => {
       });
 
       if (response.data.token) {
-        console.log('Login response:', response.data);
         localStorage.setItem('token', response.data.token);
         dispatch(setCredentials({
           user: response.data.user,
@@ -150,7 +149,6 @@ const LoginPage = () => {
         navigate('/');
       }
     } catch (err) {
-      console.error('Login error:', err);
       if (err.response && err.response.data) {
         setError(err.response.data.message || '로그인에 실패했습니다.');
       } else {

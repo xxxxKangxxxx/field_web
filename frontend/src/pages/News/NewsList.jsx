@@ -236,7 +236,7 @@ const NewsList = () => {
         const response = await api.get('/api/news');
         setNews(response.data);
       } catch (error) {
-        console.error('뉴스 목록을 불러오는데 실패했습니다:', error);
+        // 에러 처리
       }
     };
 
@@ -273,7 +273,6 @@ const NewsList = () => {
 
         setNews(news.filter(item => item._id !== id));
       } catch (error) {
-        console.error('뉴스 삭제 에러:', error);
         if (error.response?.status === 401) {
           alert('로그인이 필요합니다.');
           navigate('/login');

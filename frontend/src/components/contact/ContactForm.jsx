@@ -201,7 +201,6 @@ export default function ContactForm() {
       setError(false);
     } catch (err) {
       setError(true);
-      console.error('문의 전송 실패:', err);
     } finally {
       setIsLoading(false);
     }

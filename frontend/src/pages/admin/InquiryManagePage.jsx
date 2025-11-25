@@ -133,7 +133,6 @@ function InquiryManagePage() {
       const response = await api.get('/api/inquiries/all');
       setInquiries(response.data);
     } catch (error) {
-      console.error('문의사항 조회 실패:', error);
       if (error.response?.status === 401) {
         navigate('/login');
       }
@@ -155,7 +154,7 @@ function InquiryManagePage() {
         setSelectedInquiry(prev => ({ ...prev, status: newStatus }));
       }
     } catch (error) {
-      console.error('상태 변경 실패:', error);
+      // 에러 처리
     }
   };
 

@@ -210,13 +210,10 @@ const SignupPage = () => {
         }
       );
       
-      console.log('회원가입 응답:', response.data);
-      
       if (response.data.message) {
       navigate('/login');
       }
     } catch (err) {
-      console.error('회원가입 에러:', err.response?.data || err.message);
       setError(
         err.response?.data?.message || 
         '회원가입 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.'

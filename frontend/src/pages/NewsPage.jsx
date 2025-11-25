@@ -167,7 +167,7 @@ export default function NewsPage() {
       }
       setLoading(false);
     } catch (error) {
-      console.log(error);
+      // 에러 처리
     }
   };
 

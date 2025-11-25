@@ -54,7 +54,6 @@ const App = () => {
           token
         }));
       } catch (error) {
-        console.error('Auth check failed:', error);
         localStorage.removeItem('token');
         dispatch(logout());
       } finally {

@@ -349,7 +349,6 @@ export default function Header() {
       setIsMyPageOpen(false);
       navigate('/');
     } catch (error) {
-      console.error('로그아웃 실패:', error);
       dispatch(logout());
       setIsMyPageOpen(false);
       navigate('/');

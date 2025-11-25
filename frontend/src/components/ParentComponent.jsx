@@ -8,7 +8,6 @@ function ParentComponent({startHeight, text}) {
   const handleScroll = () => {
     const scrollPosition = window.scrollY; // 현재 스크롤 위치를 가져옵니다.
     const triggerHeight = startHeight; // 애니메이션을 시작할 스크롤 위치를 지정합니다. 필요에 따라 조정 가능합니다.
-    console.log(window.scrollY);
     // 현재 스크롤 위치가 지정한 위치보다 크면 애니메이션을 시작합니다.
     if (scrollPosition > triggerHeight) {
       setShouldAnimate(true);

@@ -184,7 +184,6 @@ function InquiryManagePage() {
       const response = await api.get(isAdmin ? '/api/inquiries/all' : '/api/inquiries');
       setInquiries(response.data);
     } catch (error) {
-      console.error('문의사항 조회 실패:', error);
       if (error.response?.status === 401) {
         navigate('/login');
       }
@@ -204,7 +203,7 @@ function InquiryManagePage() {
       fetchInquiries(); // 목록 새로고침
       setIsModalOpen(false);
     } catch (error) {
-      console.error('상태 업데이트 실패:', error);
+      // 에러 처리
     }
   };
 

@@ -157,7 +157,6 @@ const NewsDetail = () => {
 
   useEffect(() => {
     if (!auth.isAuthenticated || !auth.token) {
-      console.log('Authentication required');
       navigate('/login');
       return;
     }
@@ -167,7 +166,6 @@ const NewsDetail = () => {
         const response = await api.get(`/api/news/${id}`);
         setNews(response.data);
       } catch (error) {
-        console.error('뉴스를 불러오는데 실패했습니다:', error);
         if (error.response?.status === 401) {
           alert('로그인이 필요합니다.');
           navigate('/login');
@@ -194,13 +192,6 @@ const NewsDetail = () => {
 
     if (window.confirm('정말로 이 글을 삭제하시겠습니까?')) {
       try {
-        console.log('Delete request:', {
-          id,
-          token: auth.token,
-          isAdmin: isAdmin,
-          user: auth.user
-        });
-        
         const response = await api.delete(`/api/news/${id}`, {
           headers: {
             'Authorization': `Bearer ${auth.token}`
@@ -212,7 +203,6 @@ const NewsDetail = () => {
           navigate('/news');
         }
       } catch (error) {
-        console.error('뉴스 삭제에 실패했습니다:', error);
         if (error.response?.status === 401) {
           alert('인증이 만료되었습니다. 다시 로그인해주세요.');
           navigate('/login');

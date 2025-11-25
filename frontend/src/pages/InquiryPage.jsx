@@ -156,7 +156,6 @@ function InquiryPage() {
       const response = await api.get('/api/inquiries');
       setInquiries(response.data);
     } catch (error) {
-      console.error('문의사항 조회 실패:', error);
       if (error.response?.status === 401) {
         navigate('/login');
       }

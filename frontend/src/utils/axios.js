@@ -23,7 +23,6 @@ instance.interceptors.request.use(
     return config;
   },
   (error) => {
-    console.error('Request interceptor error:', error);
     return Promise.reject(error);
   }
 );
@@ -32,7 +31,6 @@ instance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      console.error('Authentication error:', error.response.data);
       const { logout } = require('../redux/authSlice');
       store.dispatch(logout());
     }

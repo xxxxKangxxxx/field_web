@@ -133,7 +133,7 @@ function NewsDetailPage() {
         setLoading(false);
       }
     } catch (error) {
-      console.log(error);
+      // 에러 처리
     }
   };
   const fileUrl = `${import.meta.env.VITE_API_URL}/api/files/damzbyg116zhar4/`;

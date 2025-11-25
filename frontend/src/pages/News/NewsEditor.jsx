@@ -237,7 +237,6 @@ const NewsEditor = () => {
             setPreviewUrl(news.imageUrl);
           }
         } catch (error) {
-          console.error('뉴스를 불러오는데 실패했습니다:', error);
           navigate('/news');
         }
       };
@@ -326,7 +325,6 @@ const NewsEditor = () => {
       }
       navigate('/news');
     } catch (error) {
-      console.error('뉴스 저장에 실패했습니다:', error);
       alert('저장에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsSubmitting(false);

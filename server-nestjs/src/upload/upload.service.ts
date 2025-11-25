@@ -68,7 +68,6 @@ export class UploadService {
       const fileUrl = this.getFileUrl(key);
       return { key, url: fileUrl };
     } catch (error) {
-      console.error('S3 업로드 실패:', error);
       throw new Error('파일 업로드 중 오류가 발생했습니다.');
     }
   }
@@ -78,7 +77,6 @@ export class UploadService {
    */
   async deleteFile(key: string): Promise<void> {
     if (!key) {
-      console.warn('삭제할 S3 키가 없습니다.');
       return;
     }
 
@@ -89,9 +87,8 @@ export class UploadService {
 
     try {
       await this.s3Client.send(command);
-      console.log(`파일 삭제 완료: ${key}`);
     } catch (error) {
-      console.error('S3 파일 삭제 실패:', error);
+      // 에러 처리
     }
   }
 

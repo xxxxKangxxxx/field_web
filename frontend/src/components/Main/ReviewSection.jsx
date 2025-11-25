@@ -119,7 +119,7 @@ function ReviewSection() {
         localStorage.setItem('expiryTime', new Date().getTime() + EXPIRY_DURATION);
       }
     } catch (err) {
-      console.log(err);
+      // 에러 처리
     }
   };
 

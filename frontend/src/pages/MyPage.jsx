@@ -262,7 +262,6 @@ const MyPage = () => {
         confirmPassword: ''
       });
     } catch (error) {
-      console.error('정보 수정 실패:', error);
       setMessage({ 
         type: 'error', 
         text: error.response?.data?.message || '정보 수정에 실패했습니다.' 
