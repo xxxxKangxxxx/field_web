@@ -11,8 +11,8 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2
-  S3_BUCKET: field-frontend-prod # S3 버킷 이름 (생성 필요)
-  CLOUDFRONT_DISTRIBUTION_ID: E1234567890ABC # CloudFront Distribution ID (생성 필요)
+  S3_BUCKET: field-frontend-prod
+  CLOUDFRONT_DISTRIBUTION_ID: E397E44JKOMWOY # CloudFront Distribution ID
 
 jobs:
   build-and-deploy:
