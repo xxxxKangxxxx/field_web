@@ -132,6 +132,7 @@ const MobileNavigationWrapper = styled.div`
   top: 58px;
   left: 0;
   right: 0;
+  bottom: 0;
   background: #141414;
   padding: 2rem;
   transform: translateY(${props => props.$isOpen ? '0' : '-100%'});
@@ -140,9 +141,32 @@ const MobileNavigationWrapper = styled.div`
   pointer-events: ${props => props.$isOpen ? 'auto' : 'none'};
   visibility: ${props => props.$isOpen ? 'visible' : 'hidden'};
   opacity: ${props => props.$isOpen ? '1' : '0'};
+  height: calc(100vh - 58px);
   max-height: calc(100vh - 58px);
-  overflow-y: auto;
+  overflow-y: ${props => props.$isOpen ? 'auto' : 'hidden'};
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  will-change: transform;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  
+  /* 스크롤이 확실히 작동하도록 */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+  }
 
   ${theme.media.desktop} {
     display: none;
