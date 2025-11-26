@@ -478,6 +478,7 @@ export default function Header() {
                  (user?.position && user.position.includes('부장'));
   const menuRef = useRef(null);
   const myPageRef = useRef(null);
+  const scrollPositionRef = useRef(0);
   
   const transparentHeaderPages = ['/about', '/camp', '/recruit'];
   const isTransparentHeader = transparentHeaderPages.includes(location.pathname);
@@ -517,6 +518,44 @@ export default function Header() {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  // 햄버거 메뉴가 열릴 때 메인 화면 스크롤 막기 (모바일/태블릿만)
+  useEffect(() => {
+    // 데스크톱에서는 적용하지 않음
+    const isDesktop = window.innerWidth >= parseInt(theme.breakpoints.desktop);
+    if (isDesktop) {
+      return;
+    }
+
+    if (isMenuOpen) {
+      // 메뉴가 열릴 때: 현재 스크롤 위치 저장하고 body 스크롤 막기
+      scrollPositionRef.current = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollPositionRef.current}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+    } else {
+      // 메뉴가 닫힐 때: body 스크롤 복구
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      
+      // 저장된 스크롤 위치로 복원
+      window.scrollTo(0, scrollPositionRef.current);
+    }
+
+    return () => {
+      // cleanup: 컴포넌트 언마운트 시 스크롤 복구
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.body.style.overflow = '';
+      if (!isMenuOpen) {
+        window.scrollTo(0, scrollPositionRef.current);
+      }
+    };
+  }, [isMenuOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
