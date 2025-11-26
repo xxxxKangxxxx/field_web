@@ -213,7 +213,13 @@ const MobileNavigationWrapper = styled.div`
       display: flex !important;
       flex-direction: column;
       width: 100%;
-      gap: 0.8rem;
+      gap: 0;
+      position: relative;
+    }
+
+    /* 모바일 메뉴 내 프로필 드롭다운이 제대로 보이도록 */
+    .user-menu-container .user-menu-container {
+      gap: 0;
     }
   }
 `;
@@ -312,6 +318,9 @@ const UserIconWrapper = styled.div`
   font-size: 15px;
   font-weight: 500;
   white-space: nowrap;
+  width: 100%;
+  padding: 0.5rem 0;
+  min-height: 44px;
 
   ${theme.media.mobile} {
     font-size: 14px;
@@ -320,6 +329,25 @@ const UserIconWrapper = styled.div`
 
   &:hover {
     opacity: 0.7;
+  }
+
+  /* 모바일/태블릿용 터치 영역 확대 */
+  ${theme.media.tablet} {
+    width: 100%;
+    justify-content: flex-start;
+    
+    &:active {
+      opacity: 0.8;
+    }
+  }
+
+  ${theme.media.mobile} {
+    width: 100%;
+    justify-content: flex-start;
+    
+    &:active {
+      opacity: 0.8;
+    }
   }
 `;
 
@@ -340,6 +368,33 @@ const MyPageMenu = styled.div`
   display: ${props => (props.$isOpen ? 'block' : 'none')};
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 10001;
+
+  /* 모바일/태블릿용 세로 레이아웃 */
+  ${theme.media.tablet} {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    margin-top: 0.5rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.25rem 0;
+  }
+
+  ${theme.media.mobile} {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 100%;
+    margin-top: 0.5rem;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.25rem 0;
+  }
 `;
 
 const MenuItem = styled.div`
@@ -361,6 +416,33 @@ const MenuItem = styled.div`
   ${props => props.$isAdmin && `
     color: ${theme.colors.yellow};
   `}
+
+  /* 모바일/태블릿용 스타일 */
+  ${theme.media.tablet} {
+    padding: 0.4rem 1rem;
+    font-size: 0.875rem;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    &:active {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+  }
+
+  ${theme.media.mobile} {
+    padding: 0.4rem 1rem;
+    font-size: 0.875rem;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    &:active {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+  }
 `;
 
 const UserSection = styled.div`
@@ -438,8 +520,12 @@ export default function Header() {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isMyPageOpen && !event.target.closest('.user-menu-container')) {
-        setIsMyPageOpen(false);
+      // 모바일/태블릿에서는 모바일 메뉴가 열려있을 때는 클릭 외부 처리를 다르게
+      if (window.innerWidth >= parseInt(theme.breakpoints.desktop)) {
+        // 데스크톱에서만 외부 클릭 감지
+        if (isMyPageOpen && !event.target.closest('.user-menu-container')) {
+          setIsMyPageOpen(false);
+        }
       }
     };
 
@@ -465,6 +551,12 @@ export default function Header() {
   const handleMyPageClick = (e) => {
     e.stopPropagation(); // 이벤트 버블링 방지
     setIsMyPageOpen(!isMyPageOpen);
+  };
+
+  const handleMenuItemClick = (callback) => {
+    setIsMyPageOpen(false);
+    setIsMenuOpen(false); // 모바일 메뉴도 닫기
+    callback();
   };
 
   const HomeDirection = (
@@ -526,15 +618,13 @@ export default function Header() {
           </UserIconWrapper>
           <MyPageMenu $isOpen={isMyPageOpen}>
             <MenuItem onClick={() => {
-              navigate('/mypage');
-              setIsMyPageOpen(false);
+              handleMenuItemClick(() => navigate('/mypage'));
             }}>
               내 정보
             </MenuItem>
             {!isAdmin && (
               <MenuItem onClick={() => {
-                navigate('/inquiries');
-                setIsMyPageOpen(false);
+                handleMenuItemClick(() => navigate('/inquiries'));
               }}>
                 문의사항 확인
               </MenuItem>
@@ -543,8 +633,7 @@ export default function Header() {
               <MenuItem 
                 $isAdmin 
                 onClick={() => {
-                  navigate('/admin/inquiries');
-                  setIsMyPageOpen(false);
+                  handleMenuItemClick(() => navigate('/admin/inquiries'));
                 }}
               >
                 문의사항 관리
@@ -554,16 +643,16 @@ export default function Header() {
               <MenuItem 
                 $isAdmin 
                 onClick={() => {
-                  navigate('/admin/users');
-                  setIsMyPageOpen(false);
+                  handleMenuItemClick(() => navigate('/admin/users'));
                 }}
               >
                 사용자 관리
               </MenuItem>
             )}
             <MenuItem onClick={() => {
-              handleLogout();
               setIsMyPageOpen(false);
+              setIsMenuOpen(false);
+              handleLogout();
             }}>
               로그아웃
             </MenuItem>
