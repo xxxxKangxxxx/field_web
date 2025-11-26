@@ -404,7 +404,7 @@ const MyPageMenu = styled.div`
     background: rgba(255, 255, 255, 0.05);
     box-shadow: none;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 0.25rem 0;
+    padding: 0.15rem 0;
   }
 
   ${theme.media.mobile} {
@@ -417,7 +417,7 @@ const MyPageMenu = styled.div`
     background: rgba(255, 255, 255, 0.05);
     box-shadow: none;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 0.25rem 0;
+    padding: 0.15rem 0;
   }
 `;
 
@@ -443,9 +443,9 @@ const MenuItem = styled.div`
 
   /* 모바일/태블릿용 스타일 */
   ${theme.media.tablet} {
-    padding: 0.4rem 1rem;
-    font-size: 0.875rem;
-    min-height: 40px;
+    padding: 0.3rem 1rem;
+    font-size: 0.8rem;
+    min-height: 32px;
     display: flex;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
@@ -456,9 +456,9 @@ const MenuItem = styled.div`
   }
 
   ${theme.media.mobile} {
-    padding: 0.4rem 1rem;
-    font-size: 0.875rem;
-    min-height: 40px;
+    padding: 0.3rem 1rem;
+    font-size: 0.8rem;
+    min-height: 32px;
     display: flex;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
