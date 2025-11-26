@@ -35,5 +35,5 @@ ENV PORT=4002
 EXPOSE 4002
 
 # 서버 실행
-CMD ["node", "dist/main"]
+CMD ["node", "dist/src/main"]
 
