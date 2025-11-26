@@ -114,4 +114,11 @@ Thumbs.db
 
 server-express-backup/
 
+# Documentation & Scripts to ignore
 docs/
+CHANGELOG.md
+DOCKER_GUIDE.md
+DOCKER_TEST.md
+PROJECT_ROADMAP.md
+SECURITY_IMPROVEMENTS_SUMMARY.md
+docker-scripts.sh
