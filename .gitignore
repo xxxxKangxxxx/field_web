@@ -114,4 +114,4 @@ Thumbs.db
 
 server-express-backup/
 
-"docs/" >> .gitignore
+docs/
