@@ -153,7 +153,7 @@ function InquiryPage() {
 
   const fetchInquiries = async () => {
     try {
-      const response = await api.get('/api/inquiries');
+      const response = await api.get('/api/inquiries/my');
       setInquiries(response.data);
     } catch (error) {
       if (error.response?.status === 401) {

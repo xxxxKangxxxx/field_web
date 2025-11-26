@@ -65,9 +65,33 @@ import {
       @Request() req: RequestWithUser,
       @UploadedFile() file?: Express.Multer.File,
     ) {
-      // 파일 크기 검증 (10MB)
-      if (file && file.size > 10 * 1024 * 1024) {
-        throw new BadRequestException('파일 크기는 10MB를 초과할 수 없습니다.');
+      console.log('뉴스 생성 요청 받음');
+      console.log('요청 본문:', createNewsDto);
+      
+      // 파일명 인코딩 문제 해결
+      if (file) {
+        // 파일명이 latin1로 잘못 인코딩된 경우를 UTF-8로 변환
+        try {
+          const buffer = Buffer.from(file.originalname, 'latin1');
+          file.originalname = buffer.toString('utf8');
+        } catch (e) {
+          // 변환 실패 시 원본 사용
+          console.warn('파일명 인코딩 변환 실패:', e);
+        }
+        
+        console.log('파일 정보:', {
+          originalname: file.originalname,
+          mimetype: file.mimetype,
+          size: file.size,
+          fieldname: file.fieldname
+        });
+
+        // 파일 크기 검증 (10MB)
+        if (file.size > 10 * 1024 * 1024) {
+          throw new BadRequestException('파일 크기는 10MB를 초과할 수 없습니다.');
+        }
+      } else {
+        console.log('파일 없음');
       }
   
       return this.newsService.create(createNewsDto, req.user.id, file);
@@ -87,9 +111,33 @@ import {
       @Body() updateNewsDto: UpdateNewsDto,
       @UploadedFile() file?: Express.Multer.File,
     ) {
-      // 파일 크기 검증 (10MB)
-      if (file && file.size > 10 * 1024 * 1024) {
-        throw new BadRequestException('파일 크기는 10MB를 초과할 수 없습니다.');
+      console.log('뉴스 수정 요청 받음:', id);
+      console.log('요청 본문:', updateNewsDto);
+      
+      // 파일명 인코딩 문제 해결
+      if (file) {
+        // 파일명이 latin1로 잘못 인코딩된 경우를 UTF-8로 변환
+        try {
+          const buffer = Buffer.from(file.originalname, 'latin1');
+          file.originalname = buffer.toString('utf8');
+        } catch (e) {
+          // 변환 실패 시 원본 사용
+          console.warn('파일명 인코딩 변환 실패:', e);
+        }
+        
+        console.log('파일 정보:', {
+          originalname: file.originalname,
+          mimetype: file.mimetype,
+          size: file.size,
+          fieldname: file.fieldname
+        });
+
+        // 파일 크기 검증 (10MB)
+        if (file.size > 10 * 1024 * 1024) {
+          throw new BadRequestException('파일 크기는 10MB를 초과할 수 없습니다.');
+        }
+      } else {
+        console.log('파일 없음');
       }
   
       return this.newsService.update(id, updateNewsDto, file);

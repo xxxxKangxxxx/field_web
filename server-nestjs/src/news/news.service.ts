@@ -80,10 +80,39 @@ export class NewsService {
 
     // 파일이 있는 경우 S3 업로드
     if (file) {
-      const uploadResult = await this.uploadService.uploadFile(file, 'news');
-      fileKey = uploadResult.key;
-      fileName = file.originalname;
-      fileType = file.mimetype;
+      try {
+        // 파일명 인코딩 문제 해결
+        let decodedFileName = file.originalname;
+        
+        // 여러 인코딩 방식 시도
+        try {
+          // 1. URL 디코딩 시도
+          decodedFileName = decodeURIComponent(file.originalname);
+        } catch (e) {
+          // 2. Buffer를 사용한 UTF-8 디코딩 시도
+          try {
+            // 파일명이 잘못 인코딩된 경우를 대비해 Buffer로 변환 후 디코딩
+            const buffer = Buffer.from(file.originalname, 'latin1');
+            decodedFileName = buffer.toString('utf8');
+          } catch (e2) {
+            // 3. 모든 시도 실패 시 원본 사용
+            decodedFileName = file.originalname;
+          }
+        }
+        
+        console.log('원본 파일명:', file.originalname);
+        console.log('디코딩된 파일명:', decodedFileName);
+        console.log('파일 업로드 시작:', decodedFileName, file.size, 'bytes');
+        
+        const uploadResult = await this.uploadService.uploadFile(file, 'news');
+        fileKey = uploadResult.key;
+        fileName = decodedFileName;
+        fileType = file.mimetype;
+        console.log('파일 업로드 완료:', fileKey);
+      } catch (error) {
+        console.error('파일 업로드 실패:', error);
+        throw error;
+      }
     }
 
     try {
@@ -145,9 +174,28 @@ export class NewsService {
       }
 
       // 새 파일 업로드
+      // 파일명 인코딩 문제 해결
+      let decodedFileName = file.originalname;
+      
+      // 여러 인코딩 방식 시도
+      try {
+        // 1. URL 디코딩 시도
+        decodedFileName = decodeURIComponent(file.originalname);
+      } catch (e) {
+        // 2. Buffer를 사용한 UTF-8 디코딩 시도
+        try {
+          // 파일명이 잘못 인코딩된 경우를 대비해 Buffer로 변환 후 디코딩
+          const buffer = Buffer.from(file.originalname, 'latin1');
+          decodedFileName = buffer.toString('utf8');
+        } catch (e2) {
+          // 3. 모든 시도 실패 시 원본 사용
+          decodedFileName = file.originalname;
+        }
+      }
+      
       const uploadResult = await this.uploadService.uploadFile(file, 'news');
       newFileKey = uploadResult.key;
-      newFileName = file.originalname;
+      newFileName = decodedFileName;
       newFileType = file.mimetype;
     }
 

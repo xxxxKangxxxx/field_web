@@ -40,5 +40,6 @@ export const { setCredentials, logout } = authSlice.actions;
 export const selectCurrentUser = (state) => state.auth.user;
 export const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
 export const selectIsManager = (state) => state.auth.user?.isAdmin === true;
+export const selectIsSuperAdmin = (state) => state.auth.user?.isSuperAdmin === true;
 
 export default authSlice.reducer; 

@@ -1,6 +1,6 @@
 // server-nestjs/src/auth/auth.module.ts
 
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -15,7 +15,7 @@ import { Verification, VerificationSchema } from './schemas/verification.schema'
 
 @Module({
   imports: [
-    UsersModule,
+    forwardRef(() => UsersModule),
     EmailModule,
     MongooseModule.forFeature([
       { name: Verification.name, schema: VerificationSchema },
@@ -50,6 +50,6 @@ import { Verification, VerificationSchema } from './schemas/verification.schema'
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, VerificationService],
-  exports: [AuthService, JwtStrategy, PassportModule],
+  exports: [AuthService, JwtStrategy, PassportModule, VerificationService],
 })
 export class AuthModule {}

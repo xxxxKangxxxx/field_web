@@ -26,12 +26,24 @@ import {
     constructor(private authService: AuthService) {}
 
     /**
-     * 인증번호 발송
+     * 인증번호 발송 (회원가입용)
      * POST /auth/send-verification
      */
     @Post('send-verification')
     async sendVerification(@Body() sendVerificationDto: SendVerificationDto) {
-      return this.authService.sendVerification(sendVerificationDto.email);
+      return this.authService.sendVerification(sendVerificationDto.email, false);
+    }
+
+    /**
+     * 인증번호 발송 (비밀번호 변경용)
+     * POST /auth/send-password-verification
+     * JWT 인증 필요
+     */
+    @UseGuards(JwtAuthGuard)
+    @Post('send-password-verification')
+    async sendPasswordVerification(@Request() req: RequestWithUser) {
+      // 로그인한 사용자의 이메일로 인증번호 발송
+      return this.authService.sendVerification(req.user.email, true);
     }
 
     /**

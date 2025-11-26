@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import FieldIntro from './FieldIntro';
-import FieldIntro1 from '../../../public/FieldIntro1.png';
-import FieldIntro2 from '../../../public/FieldIntro2.png';
-import FieldIntro3 from '../../../public/FieldIntro3.png';
+
+const FieldIntro1 = '/FieldIntro1.png';
+const FieldIntro2 = '/FieldIntro2.png';
+const FieldIntro3 = '/FieldIntro3.png';
 
 const MainSection = styled.section`
   margin: 0 7.5%;

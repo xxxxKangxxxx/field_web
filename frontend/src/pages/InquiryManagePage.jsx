@@ -181,7 +181,7 @@ function InquiryManagePage() {
 
   const fetchInquiries = async () => {
     try {
-      const response = await api.get(isAdmin ? '/api/inquiries/all' : '/api/inquiries');
+      const response = await api.get(isAdmin ? '/api/inquiries' : '/api/inquiries/my');
       setInquiries(response.data);
     } catch (error) {
       if (error.response?.status === 401) {

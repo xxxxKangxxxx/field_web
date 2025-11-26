@@ -22,12 +22,16 @@ import {
   
     /**
      * 인증번호 발송
+     * @param email 이메일 주소
+     * @param allowExistingUser 이미 가입된 이메일도 인증번호 발송 허용 (비밀번호 변경용)
      */
-    async sendVerification(email: string) {
-      // 이미 가입된 이메일인지 확인
-      const existingUser = await this.usersService.findByEmail(email);
-      if (existingUser) {
-        throw new BadRequestException('이미 가입된 이메일입니다.');
+    async sendVerification(email: string, allowExistingUser: boolean = false) {
+      // 회원가입용인 경우에만 이미 가입된 이메일 체크
+      if (!allowExistingUser) {
+        const existingUser = await this.usersService.findByEmail(email);
+        if (existingUser) {
+          throw new BadRequestException('이미 가입된 이메일입니다.');
+        }
       }
 
       // 인증번호 생성
@@ -82,6 +86,7 @@ import {
           department: user.department,
           position: user.position,
           isAdmin: user.isAdmin,
+          isSuperAdmin: user.isSuperAdmin,
         },
       };
     }
@@ -108,12 +113,17 @@ import {
       if (user.activeToken) {
         try {
           this.jwtService.verify(user.activeToken);
+          // 토큰이 유효하면 이미 로그인된 상태
           throw new BadRequestException(
             '이미 다른 기기에서 로그인되어 있습니다. 먼저 로그아웃해주세요.',
           );
         } catch (err: any) {
-          // 토큰이 만료되었다면 계속 진행
-          if (err.name !== 'TokenExpiredError' && err.name !== 'JsonWebTokenError') {
+          // 토큰이 만료되었거나 유효하지 않으면 activeToken을 null로 업데이트하고 계속 진행
+          if (err.name === 'TokenExpiredError' || err.name === 'JsonWebTokenError') {
+            // 만료된 토큰이므로 DB에서 제거
+            await this.usersService.updateActiveToken(user._id.toString(), null);
+          } else {
+            // 다른 에러는 그대로 throw
             throw err;
           }
         }
@@ -127,6 +137,7 @@ import {
         department: user.department,
         position: user.position,
         isAdmin: user.isAdmin,
+        isSuperAdmin: user.isSuperAdmin,
       };
   
       const token = this.jwtService.sign(payload);
@@ -143,6 +154,7 @@ import {
           department: user.department,
           position: user.position,
           isAdmin: user.isAdmin,
+          isSuperAdmin: user.isSuperAdmin,
         },
       };
     }
@@ -177,6 +189,7 @@ import {
             department: user.department,
             position: user.position,
             isAdmin: user.isAdmin,
+            isSuperAdmin: user.isSuperAdmin,
             createdAt: user.createdAt,
         };
     }

@@ -5,11 +5,11 @@ import api from '../../api/axios';
 import { useSelector } from 'react-redux';
 
 const NewsListContainer = styled.div`
-  padding: 2rem 10%;
+  padding: 2rem 15%;
   min-height: calc(100vh - 58px);
 
   @media (max-width: 768px) {
-    padding: 2rem 5%;
+    padding: 2rem 3%;
   }
 `;
 
@@ -329,7 +329,7 @@ const NewsList = () => {
                 <NewsInfo>
                   <AuthorInfo>
                     <span>
-                      {item.author?.department || '관리자'}
+                      {item.author?.name || '관리자'}
                       {item.author?.isAdmin && <AdminBadge>관리자</AdminBadge>}
                     </span>
                   </AuthorInfo>

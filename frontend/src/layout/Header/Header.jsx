@@ -283,7 +283,9 @@ export default function Header() {
   const isAuthenticated = auth.isAuthenticated;
   const user = auth.user;
   
-  const isAdmin = user?.isAdmin || 
+  const isSuperAdmin = user?.isSuperAdmin === true;
+  const isAdmin = isSuperAdmin || 
+                 user?.isAdmin || 
                  user?.position === '단장' || 
                  user?.position === '부단장' || 
                  (user?.position && user.position.includes('부장'));
@@ -411,6 +413,17 @@ export default function Header() {
                 }}
               >
                 문의사항 관리
+              </MenuItem>
+            )}
+            {isSuperAdmin && (
+              <MenuItem 
+                $isAdmin 
+                onClick={() => {
+                  navigate('/admin/users');
+                  setIsMyPageOpen(false);
+                }}
+              >
+                사용자 관리
               </MenuItem>
             )}
             <MenuItem onClick={() => {

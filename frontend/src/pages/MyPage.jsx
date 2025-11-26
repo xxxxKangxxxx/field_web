@@ -161,6 +161,13 @@ const CancelButton = styled(Button)`
   color: white;
 `;
 
+const VerificationButton = styled(Button)`
+  background-color: #2196F3;
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.3rem 0.8rem;
+`;
+
 const Message = styled.div`
   padding: 1rem;
   border-radius: 8px;
@@ -178,10 +185,38 @@ const Message = styled.div`
   }
 `;
 
+const VerificationSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+`;
+
+const VerificationRow = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+`;
+
+const VerificationInput = styled(Input)`
+  flex: 1;
+  max-width: 200px;
+`;
+
+const VerificationMessage = styled.div`
+  font-size: 0.75rem;
+  color: #4CAF50;
+  margin-top: 0.3rem;
+`;
+
 const MyPage = () => {
   const { user } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isSuperAdmin = user?.isSuperAdmin === true;
   const [isEditMode, setIsEditMode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
@@ -192,6 +227,11 @@ const MyPage = () => {
     password: '',
     confirmPassword: ''
   });
+  const [isPasswordVerified, setIsPasswordVerified] = useState(false);
+  const [verificationCode, setVerificationCode] = useState('');
+  const [isSendingCode, setIsSendingCode] = useState(false);
+  const [isVerifyingCode, setIsVerifyingCode] = useState(false);
+  const [isCodeSent, setIsCodeSent] = useState(false);
 
   const departments = [
     '총기획단',
@@ -218,8 +258,72 @@ const MyPage = () => {
     });
   };
 
+  const handleSendVerificationCode = async () => {
+    setIsSendingCode(true);
+    setMessage({ type: '', text: '' });
+    try {
+      await api.post(
+        '/api/auth/send-password-verification',
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        }
+      );
+      setIsCodeSent(true);
+      setMessage({ type: 'success', text: '인증번호가 발송되었습니다. 이메일을 확인해주세요.' });
+    } catch (error) {
+      setMessage({ 
+        type: 'error', 
+        text: error.response?.data?.message || '인증번호 발송에 실패했습니다.' 
+      });
+    } finally {
+      setIsSendingCode(false);
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    if (!verificationCode || verificationCode.length !== 6) {
+      setMessage({ type: 'error', text: '인증번호 6자리를 입력해주세요.' });
+      return;
+    }
+
+    setIsVerifyingCode(true);
+    setMessage({ type: '', text: '' });
+    try {
+      await api.post(
+        '/api/auth/verify-email',
+        {
+          email: user.email,
+          code: verificationCode
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        }
+      );
+      setIsPasswordVerified(true);
+      setMessage({ type: 'success', text: '이메일 인증이 완료되었습니다. 비밀번호를 변경할 수 있습니다.' });
+    } catch (error) {
+      setMessage({ 
+        type: 'error', 
+        text: error.response?.data?.message || '인증번호가 일치하지 않습니다.' 
+      });
+    } finally {
+      setIsVerifyingCode(false);
+    }
+  };
+
   const handleSubmit = async () => {
     setMessage({ type: '', text: '' });
+
+    // 비밀번호 변경 시 인증 완료 여부 확인
+    if (formData.password && !isPasswordVerified) {
+      setMessage({ type: 'error', text: '비밀번호 변경을 위해 이메일 인증을 완료해주세요.' });
+      return;
+    }
 
     // 비밀번호 확인
     if (formData.password && formData.password !== formData.confirmPassword) {
@@ -229,14 +333,21 @@ const MyPage = () => {
 
     setIsLoading(true);
     try {
+      // 일반 사용자는 이름과 비밀번호만 수정 가능
+      // SuperAdmin은 모든 정보 수정 가능
       const updateData = {
         name: formData.name,
-        department: formData.department,
-        position: formData.position
       };
+
+      // SuperAdmin인 경우에만 department와 position 수정 가능
+      if (user?.isSuperAdmin) {
+        updateData.department = formData.department;
+        updateData.position = formData.position;
+      }
 
       if (formData.password) {
         updateData.password = formData.password;
+        updateData.confirmPassword = formData.confirmPassword;
       }
 
       const response = await api.put(
@@ -261,6 +372,8 @@ const MyPage = () => {
         password: '',
         confirmPassword: ''
       });
+      setIsPasswordVerified(false);
+      setVerificationCode('');
     } catch (error) {
       setMessage({ 
         type: 'error', 
@@ -280,7 +393,10 @@ const MyPage = () => {
       password: '',
       confirmPassword: ''
     });
-    setMessage({ type: '', text: '' });
+      setIsPasswordVerified(false);
+      setVerificationCode('');
+      setIsCodeSent(false);
+      setMessage({ type: '', text: '' });
   };
 
   if (!user) {
@@ -324,7 +440,7 @@ const MyPage = () => {
         <ProfileItem>
           <Label>소속</Label>
           <Divider>|</Divider>
-          {isEditMode ? (
+          {isEditMode && user?.isSuperAdmin ? (
             <Select
               name="department"
               value={formData.department}
@@ -343,7 +459,7 @@ const MyPage = () => {
         <ProfileItem>
           <Label>직책</Label>
           <Divider>|</Divider>
-          {isEditMode ? (
+          {isEditMode && user?.isSuperAdmin ? (
             <Select
               name="position"
               value={formData.position}
@@ -362,6 +478,46 @@ const MyPage = () => {
         {isEditMode && (
           <>
             <ProfileItem>
+              <Label>비밀번호 변경</Label>
+              <Divider>|</Divider>
+              <VerificationSection>
+                {!isPasswordVerified ? (
+                  <>
+                    <VerificationRow>
+                      <VerificationButton 
+                        onClick={handleSendVerificationCode} 
+                        disabled={isSendingCode}
+                      >
+                        {isSendingCode ? '발송 중...' : '인증번호 발송'}
+                      </VerificationButton>
+                    </VerificationRow>
+                    {isCodeSent && (
+                      <VerificationRow>
+                        <VerificationInput
+                          type="text"
+                          value={verificationCode}
+                          onChange={(e) => setVerificationCode(e.target.value)}
+                          placeholder="인증번호 6자리"
+                          maxLength={6}
+                        />
+                        <VerificationButton 
+                          onClick={handleVerifyCode} 
+                          disabled={isVerifyingCode || !verificationCode}
+                        >
+                          {isVerifyingCode ? '확인 중...' : '인증 확인'}
+                        </VerificationButton>
+                      </VerificationRow>
+                    )}
+                  </>
+                ) : (
+                  <VerificationMessage>
+                    ✓ 이메일 인증이 완료되었습니다.
+                  </VerificationMessage>
+                )}
+              </VerificationSection>
+            </ProfileItem>
+            
+            <ProfileItem>
               <Label>새 비밀번호</Label>
               <Divider>|</Divider>
               <Input
@@ -370,6 +526,7 @@ const MyPage = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="새 비밀번호를 입력하세요"
+                disabled={!isPasswordVerified}
               />
             </ProfileItem>
             
@@ -382,6 +539,7 @@ const MyPage = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 placeholder="비밀번호를 다시 입력하세요"
+                disabled={!isPasswordVerified}
               />
             </ProfileItem>
           </>

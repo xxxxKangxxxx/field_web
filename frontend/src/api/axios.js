@@ -5,9 +5,7 @@ const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:4002';
 const api = axios.create({
   baseURL,
   withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  // 기본 헤더는 인터셉터에서 설정 (FormData인 경우 제외)
 });
 
 // 요청 인터셉터 추가
@@ -15,11 +13,17 @@ api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     
-    // 기본 헤더 설정
-    config.headers = {
-      ...config.headers,
-      'Content-Type': 'application/json',
-    };
+    // FormData인 경우 Content-Type 헤더를 완전히 제거 (브라우저가 자동으로 boundary 포함 multipart/form-data 설정)
+    if (config.data instanceof FormData) {
+      // FormData인 경우 Content-Type 헤더를 삭제하여 브라우저가 자동으로 설정하도록 함
+      delete config.headers['Content-Type'];
+    } else {
+      // FormData가 아닌 경우에만 Content-Type 설정
+      config.headers = {
+        ...config.headers,
+        'Content-Type': 'application/json',
+      };
+    }
 
     // 토큰이 있는 경우에만 Authorization 헤더 추가
     if (token) {

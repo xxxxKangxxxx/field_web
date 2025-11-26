@@ -26,6 +26,7 @@ import InquiryPage from './pages/InquiryPage';
 import InquiryManagePage from './pages/admin/InquiryManagePage';
 import PrivateRoute from './components/PrivateRoute';
 import RecruitManager from './pages/admin/RecruitManager';
+import UserManager from './pages/admin/UserManager';
 
 const LoadingSpinner = styled.div`
   display: flex;
@@ -84,12 +85,12 @@ const App = () => {
           <Route path="/recruit" element={<RecruitPage />} />
           <Route path="/news" element={<NewsList />} />
           <Route path="/news/create" element={
-            <PrivateRoute adminOnly>
+            <PrivateRoute requireManager>
               <NewsEditor />
             </PrivateRoute>
           } />
           <Route path="/news/edit/:id" element={
-            <PrivateRoute adminOnly>
+            <PrivateRoute requireManager>
               <NewsEditor />
             </PrivateRoute>
           } />
@@ -110,19 +111,25 @@ const App = () => {
           
           {/* 관리자 전용 라우트 */}
           <Route path="/admin/profiles" element={
-            <PrivateRoute adminOnly>
+            <PrivateRoute requireManager>
               <ProfileManager />
             </PrivateRoute>
           } />
           <Route path="/admin/inquiries" element={
-            <PrivateRoute adminOnly>
+            <PrivateRoute requireManager>
               <InquiryManagePage />
             </PrivateRoute>
           } />
 
           <Route path="/admin/recruit" element={
-            <PrivateRoute adminOnly>
+            <PrivateRoute requireManager>
               <RecruitManager />
+            </PrivateRoute>
+          } />
+
+          <Route path="/admin/users" element={
+            <PrivateRoute requireSuperAdmin>
+              <UserManager />
             </PrivateRoute>
           } />
 

@@ -13,6 +13,7 @@ export interface JwtPayload {
   department: string;
   position: string;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
 }
 
 @Injectable()
@@ -56,6 +57,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       department: user.department,
       position: user.position,
       isAdmin: user.isAdmin,
+      isSuperAdmin: user.isSuperAdmin,
     };
   }
 }

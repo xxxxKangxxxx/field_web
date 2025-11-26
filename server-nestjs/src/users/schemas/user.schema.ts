@@ -64,6 +64,9 @@ export class User {
   @Prop({ default: false })
   isAdmin: boolean;
 
+  @Prop({ default: false })
+  isSuperAdmin: boolean;
+
   @Prop({ default: null })
   activeToken: string;
 

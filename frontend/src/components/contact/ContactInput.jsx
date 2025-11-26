@@ -114,10 +114,11 @@ export default function ContactInput({
   changeFn,
   maxLength,
   placeholder,
+  defaultValue,
 }) {
   const Label = inputType === 'textarea' ? TextArea : Input;
   const timeoutIdRef = useRef(null);
-  const [enteredData, setEnteredData] = useState('');
+  const [enteredData, setEnteredData] = useState(defaultValue || '');
   const [isValid, setIsValid] = useState(false);
 
   function changeHandler(event) {
@@ -147,6 +148,13 @@ export default function ContactInput({
     changeFn(data, inputName);
   }, [enteredData, validFn, changeFn, inputName]);
 
+  // defaultValue가 변경되면 enteredData 업데이트
+  useEffect(() => {
+    if (defaultValue !== undefined && defaultValue !== enteredData) {
+      setEnteredData(defaultValue);
+    }
+  }, [defaultValue]);
+
   return (
     <InputBox valid={isValid} imgSrc={imgSrc} imgAlt={imgAlt} name={title}>
       <Label
@@ -156,6 +164,7 @@ export default function ContactInput({
         autoComplete={autoComplete}
         maxLength={maxLength}
         placeholder={placeholder}
+        defaultValue={defaultValue}
       />
     </InputBox>
   );

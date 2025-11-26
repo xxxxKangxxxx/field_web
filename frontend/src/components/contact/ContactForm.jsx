@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import {useState, useRef} from 'react';
+import {useState, useRef, useEffect} from 'react';
 import theme from '../../theme';
 import ContactModal from './ContactModal';
 import ContactInput from './ContactInput';
@@ -186,12 +186,21 @@ export default function ContactForm() {
   const emailValid = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
   const phoneValid = /^[0-9]{9,11}$/;
 
+  // 로그인한 사용자의 이메일을 자동으로 채우기 (수정 가능)
+  // defaultValue prop을 통해 ContactInput에 전달되므로 별도 처리 불필요
+
   async function SendMessage() {
     const data = {};
 
     Object.keys(enteredData).forEach(key => {
       data[key] = enteredData[key].current.value;
     });
+
+    // 사용자가 입력한 이메일을 사용 (기본값은 로그인한 사용자의 이메일)
+    // 만약 이메일이 비어있으면 로그인한 사용자의 이메일 사용
+    if (!data.email && user?.email) {
+      data.email = user.email;
+    }
 
     setIsLoading(true);
     setShowModal(true);
@@ -319,6 +328,7 @@ export default function ContactForm() {
             validFn={emailisValid}
             autoComplete='email'
             changeFn={(data, name) => up(data, name)}
+            defaultValue={user?.email || ''}
           />
 
           <ContactInput

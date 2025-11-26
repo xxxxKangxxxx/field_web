@@ -121,7 +121,8 @@ function InquiryManagePage() {
   const { user } = useSelector(state => state.auth);
   
   useEffect(() => {
-    if (!user?.isAdmin) {
+    // 최상위 관리자 또는 일반 관리자 허용
+    if (!user?.isSuperAdmin && !user?.isAdmin) {
       navigate('/');
       return;
     }
@@ -130,7 +131,7 @@ function InquiryManagePage() {
 
   const fetchInquiries = async () => {
     try {
-      const response = await api.get('/api/inquiries/all');
+      const response = await api.get('/api/inquiries');
       setInquiries(response.data);
     } catch (error) {
       if (error.response?.status === 401) {
