@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from '../../theme';
 import TextGenerator from '../TextGenerator';
 
 const TitleContainer = styled.section`
@@ -8,7 +9,9 @@ const TitleContainer = styled.section`
   justify-content: center;
   align-items: center;
   position: relative;
-  @media screen and (min-width: 1024px) {
+  z-index: 1;
+
+  ${theme.media.desktop} {
     font-size: 3.125rem;
     margin: 0 15%;
   }
@@ -20,7 +23,8 @@ const Figure = styled.figure`
   align-items: center;
   position: ${props => props.$position || ''};
   bottom: 1rem;
-  @media screen and (min-width: 1024px) {
+
+  ${theme.media.desktop} {
     display: none;
   }
 `;

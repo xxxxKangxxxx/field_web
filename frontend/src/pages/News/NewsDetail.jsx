@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import theme from '../../theme';
 import { useSelector } from 'react-redux';
 import api from '../../api/axios';
 import { MANAGER_POSITIONS_LIST } from '../../redux/authSlice';
@@ -12,7 +13,11 @@ const NewsDetailContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
 
-  @media (max-width: 768px) {
+  ${theme.media.tablet} {
+    padding: 2rem 4%;
+  }
+
+  ${theme.media.mobile} {
     padding: 2rem 3%;
   }
 `;
@@ -41,7 +46,7 @@ const Title = styled.h1`
   line-height: 1.4;
   color: ${props => props.theme.colors.white};
 
-  @media (max-width: 768px) {
+  ${theme.media.mobile} {
     font-size: 1.5rem;
   }
 `;
@@ -87,7 +92,7 @@ const ContentImage = styled.img`
     transform: scale(1.02);
   }
   
-  @media (max-width: 768px) {
+  ${theme.media.mobile} {
     max-width: 100%;
     margin: 1rem 0;
   }
@@ -160,7 +165,7 @@ const Content = styled.div`
   color: ${props => props.theme.colors.white};
   margin-top: 2rem;
   
-  @media (max-width: 768px) {
+  ${theme.media.mobile} {
     font-size: 0.875rem;
     line-height: 1.8;
   }
@@ -320,7 +325,7 @@ const BackButton = styled.button`
     transform: translateX(0);
   }
 
-  @media (max-width: 768px) {
+  ${theme.media.mobile} {
     padding: 0.3rem 0.75rem;
   }
 `;

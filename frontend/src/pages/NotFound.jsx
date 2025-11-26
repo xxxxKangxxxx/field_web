@@ -7,7 +7,7 @@ const PageSection = styled.section`
   display: flex;
   flex-direction: column;
 
-  @media (min-width: 1024px) {
+  ${theme.media.desktop} {
     height: calc(100vh - 134px);
   }
 `;

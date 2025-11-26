@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import theme from '../theme';
 import api from '../api/axios';
 import { setCredentials } from '../redux/authSlice';
 
@@ -13,6 +14,10 @@ const LoginContainer = styled.div`
   justify-content: center;
   padding: 2rem;
   background: #141414;
+
+  ${theme.media.mobile} {
+    padding: 1.5rem;
+  }
 `;
 
 const LoginBox = styled.div`
@@ -22,6 +27,11 @@ const LoginBox = styled.div`
   background: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
   backdrop-filter: blur(10px);
+
+  ${theme.media.mobile} {
+    padding: 2rem 1.5rem;
+    max-width: 95%;
+  }
 `;
 
 const Title = styled.h2`
@@ -30,6 +40,11 @@ const Title = styled.h2`
   color: #fff;
   margin-bottom: 2rem;
   text-align: center;
+
+  ${theme.media.mobile} {
+    font-size: 24px;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const Form = styled.form`
@@ -86,6 +101,12 @@ const LoginButton = styled.button`
   cursor: pointer;
   transition: all 0.2s ease;
   box-sizing: border-box;
+  min-height: 44px;
+
+  ${theme.media.mobile} {
+    padding: 14px;
+    font-size: 15px;
+  }
 
   &:hover {
     background: rgba(255, 255, 255, 0.9);

@@ -1,12 +1,14 @@
 import {useRef, useEffect} from 'react';
 import styled from 'styled-components';
+import theme from '../../theme';
 
 const MainSection = styled.section`
   margin: 0 7.5%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  @media screen and (min-width: 1024px) {
+
+  ${theme.media.desktop} {
     margin: 0 15%;
   }
 `;
@@ -25,7 +27,18 @@ const NanumH3 = styled(H3)`
   gap: 2rem;
   font-size: 1.625rem;
   margin: 10rem 0 5rem 0;
-  @media screen and (min-width: 1024px) {
+
+  ${theme.media.tablet} {
+    margin: 8rem 0 4rem 0;
+  }
+
+  ${theme.media.mobile} {
+    font-size: 1.5rem;
+    margin: 6rem 0 3rem 0;
+    gap: 1.5rem;
+  }
+
+  ${theme.media.desktop} {
     font-size: 2rem;
     margin: 5rem 0 3rem 0;
   }
@@ -40,7 +53,12 @@ const Image = styled.img`
   border-radius: ${props => props.radius || ''};
   opacity: 0;
   transition: 3s;
-  @media screen and (min-width: 1024px) {
+
+  ${theme.media.mobile} {
+    width: 120px;
+  }
+
+  ${theme.media.desktop} {
     width: 160px;
     margin: 2rem 0;
   }
@@ -50,12 +68,21 @@ const H2 = styled.h2`
   font-size: 1.7rem;
   margin: ${props => props.$margin || '0'};
   text-align: center;
+
+  ${theme.media.mobile} {
+    font-size: 1.5rem;
+  }
 `;
 
 const GoblinH2 = styled(H2)`
   font-family: 'Goblin One';
   font-size: 1.875rem;
-  @media screen and (min-width: 1024px) {
+
+  ${theme.media.mobile} {
+    font-size: 1.625rem;
+  }
+
+  ${theme.media.desktop} {
     font-size: 2rem;
     margin: 2rem;
   }

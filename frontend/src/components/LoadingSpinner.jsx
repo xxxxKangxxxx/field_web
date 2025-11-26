@@ -16,6 +16,12 @@ const LoadingSpin = styled.div`
   border-top-color: ${theme.colors.white};
   border-radius: 50%;
   animation: ${spin} 0.5s linear infinite;
+
+  ${theme.media.mobile} {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.15rem;
+  }
 `;
 
 const LoadingWrapper = styled.div`
@@ -28,7 +34,15 @@ const LoadingWrapper = styled.div`
 const P = styled.p`
   font-size: 2rem;
   color: white;
-  text-align: center; // 텍스트를 가운데 정렬합니다.
+  text-align: center;
+
+  ${theme.media.tablet} {
+    font-size: 1.75rem;
+  }
+
+  ${theme.media.mobile} {
+    font-size: 1.5rem;
+  }
 `;
 
 function LoadingSpinner() {

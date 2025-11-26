@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, {keyframes} from 'styled-components';
+import theme from '../../theme';
 
 const H3 = styled.h3`
   display: flex;
@@ -8,7 +9,12 @@ const H3 = styled.h3`
   font-size: 1.5rem;
   margin: ${props => props.$margin || '0'};
   font-weight: 900;
-  @media screen and (min-width: 1024px) {
+
+  ${theme.media.mobile} {
+    font-size: 1.375rem;
+  }
+
+  ${theme.media.desktop} {
     font-size: 1.8rem;
     grid-row: 1 / 2;
     grid-column: 2 / 4;
@@ -25,7 +31,8 @@ const Figure = styled.figure`
   position: ${props => props.$position || ''};
   bottom: 1rem;
   margin: ${props => props.$margin || '0'};
-  @media screen and (min-width: 1024px) {
+
+  ${theme.media.desktop} {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
     gird-template-rows: 1fr 2fr;
@@ -40,7 +47,12 @@ const Image = styled.img`
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: ${props => props.radius || ''};
-  @media screen and (min-width: 1023px) {
+
+  ${theme.media.tablet} {
+    width: 90%;
+  }
+
+  ${theme.media.desktop} {
     order: -5;
     grid-row: 1 / 3;
     grid-column: 1 / 2;
@@ -55,7 +67,12 @@ const P = styled.p`
   color: ${props => (props.color ? theme.colors[props.color] : '')};
   font-size: ${props => (props.size ? props.size : '1rem')};
   text-align: center;
-  @media screen and (min-width: 1024px) {
+
+  ${theme.media.mobile} {
+    font-size: ${props => (props.size ? `calc(${props.size} * 0.9)` : '0.9rem')};
+  }
+
+  ${theme.media.desktop} {
     text-align: left;
     font-size: 1.2rem;
   }
@@ -65,7 +82,8 @@ const Figcaption = styled.figcaption`
   margin: ${props => props.$margin || '0'};
   word-break: keep-all;
   line-height: 1.5;
-  @media screen and (min-width: 1024px) {
+
+  ${theme.media.desktop} {
     grid-row: 2 / 3;
     grid-column: 2 / 4;
     margin: 0;
@@ -86,7 +104,18 @@ const Card = styled.div`
   margin: 8rem 0;
   box-shadow: 0px 0px 15px 5px #2b3382;
   animation: ${shadowAnimation} 3s infinite;
-  @media screen and (min-width: 1024px) {
+
+  ${theme.media.mobile} {
+    padding: 1.5rem 1rem;
+    margin: 5rem 0;
+  }
+
+  ${theme.media.tablet} {
+    padding: 1.75rem 1.25rem;
+    margin: 6rem 0;
+  }
+
+  ${theme.media.desktop} {
     margin: 8rem 0;
   }
 `;

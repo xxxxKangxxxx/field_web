@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
+import theme from '../theme';
 import { setCampTitle } from '../redux/campTitleSlice';
 
 const DropdownContainer = styled.div`
@@ -8,6 +9,10 @@ const DropdownContainer = styled.div`
   width: 100%;
   max-width: 300px;
   margin: 0 auto;
+
+  ${theme.media.mobile} {
+    max-width: 100%;
+  }
 `;
 
 const DropdownButton = styled.button`
@@ -20,9 +25,15 @@ const DropdownButton = styled.button`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 44px;
   
   &:hover {
     background: rgba(255, 255, 255, 0.1);
+  }
+
+  ${theme.media.mobile} {
+    padding: 12px;
+    font-size: 0.9rem;
   }
 `;
 
@@ -45,9 +56,17 @@ const DropdownItem = styled.li`
   padding: 10px;
   color: white;
   cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
 
   &:hover {
     background: rgba(255, 255, 255, 0.1);
+  }
+
+  ${theme.media.mobile} {
+    padding: 12px;
+    font-size: 0.9rem;
   }
 `;
 

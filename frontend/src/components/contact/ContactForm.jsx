@@ -9,28 +9,76 @@ import { useSelector } from 'react-redux';
 import Modal from '../../components/Modal';
 
 const ContactSection = styled.section`
-  padding: 2rem;
-  width: 100%;
-  max-width: 800px;
-  margin: 0 auto;
+  padding: 2rem !important;
+  width: 100% !important;
+  max-width: 800px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
   background: rgba(255, 255, 255, 0.125);
   border-radius: 12px;
   backdrop-filter: blur(10px);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box !important;
+
+  ${theme.media.tablet} {
+    padding: 1.5rem !important;
+    max-width: 100% !important;
+  }
+
+  ${theme.media.mobile} {
+    padding: 1rem !important;
+    max-width: 100% !important;
+    border-radius: 8px;
+  }
 `;
 
 const Form = styled.form`
-  width: 100%;
-  box-sizing: border-box;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
   position: relative;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 1.5rem !important;
+
+  & > div:first-child {
+    width: 100% !important;
+    max-width: 100% !important;
+    align-self: stretch !important;
+    box-sizing: border-box !important;
+  }
 
   & > div:not(:first-child) {
-    width: 96%;
-    margin: 0 auto;
+    width: 100% !important;
+    max-width: 90% !important;
+    margin: 0 !important;
+    margin-left: 1.2rem !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+    align-self: flex-start !important;
+  }
+
+  ${theme.media.tablet} {
+    & > div:not(:first-child) {
+      max-width: calc(100% - 2rem) !important;
+      margin: 0 !important;
+      margin-left: 0 !important;
+      align-self: flex-start !important;
+    }
+  }
+
+  ${theme.media.mobile} {
+    & > div:not(:first-child) {
+      max-width: calc(100% - 3rem) !important;
+      margin: 0 !important;
+      margin-left: .8rem !important;
+      align-self: flex-start !important;
+    }
   }
 
   &::before {
@@ -48,6 +96,18 @@ const Form = styled.form`
     pointer-events: none;
     z-index: 0;
   }
+
+  ${theme.media.tablet} {
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 1.25rem !important;
+  }
+
+  ${theme.media.mobile} {
+    padding: 0 !important;
+    margin: 0 !important;
+    gap: 1rem !important;
+  }
 `;
 
 const FormHeader = styled.div`
@@ -56,6 +116,8 @@ const FormHeader = styled.div`
   align-items: flex-start;
   margin-bottom: 1rem;
   padding-top: 0.5rem;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 const FormTitle = styled.h2`
@@ -65,34 +127,138 @@ const FormTitle = styled.h2`
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 1px;
+
+  ${theme.media.tablet} {
+    font-size: 1.5rem;
+  }
+
+  ${theme.media.mobile} {
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+  }
 `;
 
-const TypeSelect = styled.select`
+const DropdownContainer = styled.div`
+  display: block;
+  position: relative;
+  width: auto;
+  min-width: 100px;
+  max-width: 150px;
+
+  ${theme.media.tablet} {
+    min-width: 90px;
+    max-width: 130px;
+  }
+
+  ${theme.media.mobile} {
+    min-width: 60px;
+    max-width: 100px;
+  }
+`;
+
+const DropdownButton = styled.button`
+  width: 100%;
   color: ${props => props.theme.colors.white};
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 6px;
-  padding: 0.4rem 2rem 0.4rem 0.8rem;
+  padding: 0.4rem 0.8rem 0.4rem 0.8rem;
   font-size: 0.8rem;
   cursor: pointer;
-  appearance: none;
-  min-width: 100px;
-  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
-  background-repeat: no-repeat;
-  background-position: right 0.8rem center;
-  background-size: 0.6rem auto;
+  min-height: 44px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  transition: border-color 0.2s ease;
   
   &:focus {
     outline: none;
     border-color: rgba(255, 255, 255, 0.5);
   }
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+
+  ${theme.media.mobile} {
+    padding: 0.5rem 0.75rem 0.5rem 0.75rem;
+    font-size: 0.75rem;
+  }
 `;
 
-const Option = styled.option`
+const DropdownList = styled.ul`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
   background: #1a1a1a;
-  color: ${props => props.theme.colors.white};
-  padding: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  display: ${props => props.$isOpen ? 'block' : 'none'};
+
+  ${theme.media.tablet} {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  ${theme.media.mobile} {
+    max-height: 200px;
+    overflow-y: auto;
+  }
 `;
+
+const DropdownItem = styled.li`
+  padding: 0.75rem;
+  color: ${props => props.theme.colors.white};
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  &:first-child {
+    border-radius: 6px 6px 0 0;
+  }
+
+  &:last-child {
+    border-radius: 0 0 6px 6px;
+  }
+
+  &[data-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    
+    &:hover {
+      background: transparent;
+    }
+  }
+
+  ${theme.media.mobile} {
+    padding: 0.75rem;
+    font-size: 0.75rem;
+  }
+`;
+
+const DropdownArrow = styled.span.attrs(props => ({
+  style: {
+    transform: props.$isOpen ? 'rotate(120deg)' : 'rotate(0deg)',
+  }
+}))`
+  margin-left: 0.3rem;
+  font-size: 0.6rem;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  display: inline-block;
+`;
+
 
 const SubmitButton = styled.button`
   background: ${props => props.theme.colors.primary};
@@ -110,6 +276,7 @@ const SubmitButton = styled.button`
   gap: 0.3rem;
   margin: 1rem auto 0;
   width: 130px;
+  min-height: 44px;
 
   &:hover {
     opacity: 0.9;
@@ -119,6 +286,13 @@ const SubmitButton = styled.button`
   &:disabled {
     background: #666;
     cursor: not-allowed;
+  }
+
+  ${theme.media.mobile} {
+    width: 100%;
+    max-width: 200px;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -179,6 +353,11 @@ export default function ContactForm() {
   const [showModal, setShowModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
+  
+  // 드롭다운 상태 (모든 화면 크기에서 사용)
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedType, setSelectedType] = useState('문의 유형');
+  const dropdownRef = useRef(null);
   
   const navigate = useNavigate();
   const { user } = useSelector(state => state.auth);
@@ -273,12 +452,39 @@ export default function ContactForm() {
     }
   }
 
-  function handleTypeChange(e) {
+  function handleTypeSelect(value, label) {
+    if (value === '') return; // disabled 옵션은 선택 불가
+    
     enteredData.type.current = {
-      value: e.target.value,
+      value: value,
       valid: true,
     };
+    setSelectedType(label);
+    setIsDropdownOpen(false);
   }
+
+  function toggleDropdown() {
+    setIsDropdownOpen(prev => !prev);
+  }
+
+  // 외부 클릭 시 드롭다운 닫기
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   return (
     <>
@@ -286,13 +492,40 @@ export default function ContactForm() {
         <Form onSubmit={enteredDataHandler}>
           <FormHeader>
             <FormTitle>Contact Us</FormTitle>
-            <TypeSelect onChange={handleTypeChange} defaultValue="">
-              <Option value="" disabled>문의 유형</Option>
-              <Option value="general">일반 문의</Option>
-              <Option value="business">사업 제휴</Option>
-              <Option value="support">기술 지원</Option>
-              <Option value="other">기타</Option>
-            </TypeSelect>
+            <DropdownContainer ref={dropdownRef}>
+              <DropdownButton onClick={toggleDropdown} type="button">
+                {selectedType}
+                <DropdownArrow $isOpen={isDropdownOpen}>▼</DropdownArrow>
+              </DropdownButton>
+              <DropdownList $isOpen={isDropdownOpen}>
+                <DropdownItem 
+                  data-disabled="true"
+                  onClick={() => {}}
+                >
+                  문의 유형
+                </DropdownItem>
+                <DropdownItem 
+                  onClick={() => handleTypeSelect('general', '일반 문의')}
+                >
+                  일반 문의
+                </DropdownItem>
+                <DropdownItem 
+                  onClick={() => handleTypeSelect('business', '사업 제휴')}
+                >
+                  사업 제휴
+                </DropdownItem>
+                <DropdownItem 
+                  onClick={() => handleTypeSelect('support', '기술 지원')}
+                >
+                  기술 지원
+                </DropdownItem>
+                <DropdownItem 
+                  onClick={() => handleTypeSelect('other', '기타')}
+                >
+                  기타
+                </DropdownItem>
+              </DropdownList>
+            </DropdownContainer>
           </FormHeader>
 
           <ContactInput

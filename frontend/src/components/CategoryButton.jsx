@@ -13,12 +13,18 @@ const Button = styled.button`
   font-family: inherit;
   font-weight: 700;
   padding: 0.375rem 0;
+  min-height: 44px;
   ${props =>
     props.$isActive &&
     `
     background-color: ${theme.colors.gray};
     color: white;
   `}
+
+  ${theme.media.mobile} {
+    font-size: 0.9rem;
+    padding: 0.5rem 0;
+  }
 `;
 
 function CategoryButton({label, onClick, isActive}) {

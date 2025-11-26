@@ -12,7 +12,7 @@ import api from '../../api/axios';
 const MenuBar = styled.div`
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 9999;
   background: ${props => {
     if (props.$isTransparentHeader) {
       return props.$isScrolled 
@@ -42,32 +42,48 @@ const MainHeaderWrapper = styled.div`
   height: 58px;
   padding: 0 10%;
   justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 1rem;
 
-  @media (max-width: 1023px) {
+  ${theme.media.tablet} {
     padding: 0 7.5%;
+  }
+
+  ${theme.media.mobile} {
+    padding: 0 7.5%;
+  }
+
+  ${theme.media.desktop} {
+    gap: 2rem;
   }
 `;
 
 const LeftSection = styled.div`
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 `;
 
 const RightSection = styled.div`
+  display: none;
+
+  ${theme.media.desktop} {
   display: flex;
   align-items: center;
-  gap: 4rem;
-
-  @media (max-width: 1023px) {
-    display: none;
+    gap: 3.5rem;
+    flex: 1;
+    justify-content: flex-end;
   }
 `;
 
 const Navigation = styled.nav`
   display: none;
   
-  @media (min-width: 1024px) {
+  ${theme.media.desktop} {
     display: flex;
+    align-items: center;
+    flex-shrink: 0;
     
     a {
       color: ${theme.colors.white};
@@ -76,6 +92,7 @@ const Navigation = styled.nav`
       font-weight: 600;
       transition: all 0.2s ease;
       margin-right: 3.5rem;
+      white-space: nowrap;
 
       &:last-child {
         margin-right: 0;
@@ -93,6 +110,23 @@ const Navigation = styled.nav`
   }
 `;
 
+const MobileOverlay = styled.div`
+  position: fixed;
+  top: 58px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: ${props => props.$isOpen ? '9998' : '-1'};
+  display: ${props => props.$isOpen ? 'block' : 'none'};
+  pointer-events: ${props => props.$isOpen ? 'auto' : 'none'};
+  visibility: ${props => props.$isOpen ? 'visible' : 'hidden'};
+  opacity: ${props => props.$isOpen ? '1' : '0'};
+  ${theme.media.desktop} {
+    display: none;
+  }
+`;
+
 const MobileNavigationWrapper = styled.div`
   position: fixed;
   top: 58px;
@@ -102,23 +136,34 @@ const MobileNavigationWrapper = styled.div`
   padding: 2rem;
   transform: translateY(${props => props.$isOpen ? '0' : '-100%'});
   transition: transform 0.3s ease;
+  z-index: ${props => props.$isOpen ? '10000' : '-1'};
+  pointer-events: ${props => props.$isOpen ? 'auto' : 'none'};
+  visibility: ${props => props.$isOpen ? 'visible' : 'hidden'};
+  opacity: ${props => props.$isOpen ? '1' : '0'};
+  max-height: calc(100vh - 58px);
+  overflow-y: auto;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 
-  @media (min-width: 1024px) {
+  ${theme.media.desktop} {
     display: none;
   }
 
   nav {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
     
     a {
       color: ${theme.colors.white};
       text-decoration: none;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
       transition: all 0.2s ease;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0.3rem 0;
 
       &:hover {
         opacity: 0.7;
@@ -128,6 +173,47 @@ const MobileNavigationWrapper = styled.div`
         color: #FFD700;
         opacity: 1;
       }
+    }
+  }
+
+  /* 모바일 메뉴 안의 AuthButtons와 UserSection 강제 표시 */
+  > div:last-child {
+    margin-top: 0.8rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex !important;
+    flex-direction: column;
+    width: 100%;
+    gap: 0.8rem;
+
+    /* AuthButtons 스타일 */
+    a.auth-btn {
+      min-height: 40px;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      font-size: 14px;
+      font-weight: 600;
+      color: ${theme.colors.white};
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+
+    .divider {
+      display: none !important;
+    }
+
+    /* UserSection 스타일 */
+    .user-menu-container {
+      display: flex !important;
+      flex-direction: column;
+      width: 100%;
+      gap: 0.8rem;
     }
   }
 `;
@@ -144,6 +230,11 @@ const HomeFigure = styled.figure`
 
 const HomeLogo = styled.img`
   height: 30px;
+  flex-shrink: 0;
+
+  ${theme.media.mobile} {
+    height: 26px;
+  }
 `;
 
 const HomeTitle = styled.figcaption`
@@ -152,6 +243,12 @@ const HomeTitle = styled.figcaption`
   font-weight: 600;
   letter-spacing: 0;
   color: ${theme.colors.white};
+  white-space: nowrap;
+
+  ${theme.media.mobile} {
+    font-size: 20px;
+    margin: 0.1rem 0 0 0.3rem;
+  }
 `;
 
 const MenuButton = styled.button`
@@ -162,32 +259,28 @@ const MenuButton = styled.button`
   -webkit-appearance: none;
   -moz-appearance: none;
   font-size: 0;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   &:hover {
     cursor: pointer;
   }
 
-  @media (min-width: 1024px) {
+  ${theme.media.desktop} {
     display: none;
   }
 `;
 
 const AuthButtons = styled.div`
+  display: none;
+
+  ${theme.media.desktop} {
   display: flex;
   align-items: center;
   gap: 0.8rem;
-
-  @media (max-width: 1023px) {
-    flex-direction: column;
-    width: 100%;
-  gap: 1rem;
-
-    .divider {
-      display: none;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    display: flex;
+    flex-shrink: 0;
   }
 
   .auth-btn {
@@ -196,6 +289,7 @@ const AuthButtons = styled.div`
     text-decoration: none;
     color: ${theme.colors.white};
     transition: opacity 0.2s ease;
+    white-space: nowrap;
 
     &:hover {
       opacity: 0.7;
@@ -217,6 +311,12 @@ const UserIconWrapper = styled.div`
   color: ${theme.colors.white};
   font-size: 15px;
   font-weight: 500;
+  white-space: nowrap;
+
+  ${theme.media.mobile} {
+    font-size: 14px;
+    gap: 0.4rem;
+  }
 
   &:hover {
     opacity: 0.7;
@@ -239,7 +339,7 @@ const MyPageMenu = styled.div`
   min-width: 150px;
   display: ${props => (props.$isOpen ? 'block' : 'none')};
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
+  z-index: 10001;
 `;
 
 const MenuItem = styled.div`
@@ -264,11 +364,16 @@ const MenuItem = styled.div`
 `;
 
 const UserSection = styled.div`
+  display: none;
+
+  ${theme.media.desktop} {
   position: relative;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   cursor: pointer;
+    flex-shrink: 0;
+  }
 `;
 
 export default function Header() {
@@ -321,7 +426,7 @@ export default function Header() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024) {
+      if (window.innerWidth >= parseInt(theme.breakpoints.desktop)) {
         setIsMenuOpen(false);
       }
     };
@@ -373,11 +478,41 @@ export default function Header() {
 
   const NavigationLinks = (
     <nav>
-      <Link to="/about" className={isActivePath('/about') ? 'active' : ''}>ABOUT FIELD</Link>
-      <Link to="/camp" className={isActivePath('/camp') ? 'active' : ''}>FIELD CAMP</Link>
-      <Link to="/news" className={isActivePath('/news') ? 'active' : ''}>NEWS</Link>
-      <Link to="/contact" className={isActivePath('/contact') ? 'active' : ''}>CONTACT</Link>
-      <Link to="/recruit" className={isActivePath('/recruit') ? 'active' : ''}>RECRUIT</Link>
+      <Link 
+        to="/about" 
+        className={isActivePath('/about') ? 'active' : ''}
+        onClick={() => setIsMenuOpen(false)}
+      >
+        ABOUT FIELD
+      </Link>
+      <Link 
+        to="/camp" 
+        className={isActivePath('/camp') ? 'active' : ''}
+        onClick={() => setIsMenuOpen(false)}
+      >
+        FIELD CAMP
+      </Link>
+      <Link 
+        to="/news" 
+        className={isActivePath('/news') ? 'active' : ''}
+        onClick={() => setIsMenuOpen(false)}
+      >
+        NEWS
+      </Link>
+      <Link 
+        to="/contact" 
+        className={isActivePath('/contact') ? 'active' : ''}
+        onClick={() => setIsMenuOpen(false)}
+      >
+        CONTACT
+      </Link>
+      <Link 
+        to="/recruit" 
+        className={isActivePath('/recruit') ? 'active' : ''}
+        onClick={() => setIsMenuOpen(false)}
+      >
+        RECRUIT
+      </Link>
     </nav>
   );
 
@@ -439,11 +574,19 @@ export default function Header() {
 
     return (
       <AuthButtons>
-        <Link to="/login" className="auth-btn">
+        <Link 
+          to="/login" 
+          className="auth-btn"
+          onClick={() => setIsMenuOpen(false)}
+        >
           로그인
         </Link>
         <span className="divider">|</span>
-        <Link to="/signup" className="auth-btn">
+        <Link 
+          to="/signup" 
+          className="auth-btn"
+          onClick={() => setIsMenuOpen(false)}
+        >
           회원가입
         </Link>
       </AuthButtons>
@@ -464,6 +607,7 @@ export default function Header() {
           {renderAuthSection()}
         </RightSection>
       </MainHeaderWrapper>
+      <MobileOverlay $isOpen={isMenuOpen} onClick={() => setIsMenuOpen(false)} />
       <MobileNavigationWrapper $isOpen={isMenuOpen}>
         {NavigationLinks}
         {renderAuthSection()}

@@ -24,12 +24,14 @@ const WhiteButton = styled.button`
   font-size: 0.9375rem;
   word-break: keep-all;
   box-shadow: 0.5rem 0.5rem 0.5rem rgba(0, 0, 0, 0.3);
+  min-height: 44px;
+  cursor: pointer;
   ${props =>
     props.$animate &&
     css`
       animation: ${buttonAnimation} 3s infinite;
     `}
-  @media screen and (min-width: 1024px) {
+  ${theme.media.desktop} {
     font-size: 18px;
     width: 160px;
     height: 70px;

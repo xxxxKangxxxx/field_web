@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import api from '../api/axios';
 import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
+import theme from '../theme';
 import Modal from '../components/Modal';
 
 const RegisterContainer = styled.div`
@@ -13,6 +14,10 @@ const RegisterContainer = styled.div`
   justify-content: center;
   padding: 2rem;
   background: #141414;
+
+  ${theme.media.mobile} {
+    padding: 1.5rem;
+  }
 `;
 
 const RegisterBox = styled.div`
@@ -22,12 +27,21 @@ const RegisterBox = styled.div`
   background: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
   backdrop-filter: blur(10px);
+
+  ${theme.media.mobile} {
+    padding: 2rem 1.5rem;
+    max-width: 95%;
+  }
 `;
 
 const Title = styled.h2`
   font-size: 28px;
   font-weight: 600;
   color: #fff;
+
+  ${theme.media.mobile} {
+    font-size: 24px;
+  }
   margin-bottom: 2rem;
   text-align: center;
 `;

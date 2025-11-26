@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import theme from '../../theme';
 import FieldIntro from './FieldIntro';
 
 const FieldIntro1 = '/FieldIntro1.png';
@@ -10,8 +11,16 @@ const MainSection = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  @media screen and (min-width: 769px) {
+  gap: 2rem;
+
+  ${theme.media.tablet} {
+    margin: 5rem 10%;
+    gap: 3rem;
+  }
+
+  ${theme.media.desktop} {
     margin: 10rem 15%;
+    gap: 4rem;
   }
 `;
 

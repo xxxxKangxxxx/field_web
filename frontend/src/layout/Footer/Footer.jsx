@@ -5,7 +5,7 @@ const FooterArea = styled.footer`
   background: #141414;
   padding: 10px 7.5%;
 
-  @media (min-width: 1024px) {
+  ${theme.media.desktop} {
     display: flex;
     justify-content: space-between;
     padding: 15px 15%;
@@ -22,7 +22,7 @@ const FooterContent = styled.span`
   margin: 0 0 5px 0;
   font-weight: 900;
 
-  @media (min-width: 1024px) {
+  ${theme.media.desktop} {
     margin: 0 0 8px 0;
   }
 `;
@@ -41,7 +41,7 @@ const ImgWrapper = styled.span`
     margin: 0;
   }
 
-  @media (min-width: 1024px) {
+  ${theme.media.desktop} {
     margin: auto 0;
   }
 `;

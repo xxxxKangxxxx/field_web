@@ -15,8 +15,13 @@ const H2 = styled.h2`
 const GoblinH2 = styled(H2)`
   font-family: 'Goblin One';
   font-size: ${props => props.$size || '1.875rem'};
-  @media screen and (min-width: 769px) {
+
+  ${theme.media.tablet} {
     font-size: 1.5rem;
+  }
+
+  ${theme.media.desktop} {
+    font-size: ${props => props.$size || '1.875rem'};
   }
 `;
 
@@ -31,7 +36,8 @@ const WriterContainer = styled.div`
   flex-direction: column;
   bottom: 1rem;
   text-align: center;
-  @media screen and (min-width: 1024px) {
+
+  ${theme.media.desktop} {
     flex-direction: row;
     justify-content: center;
     gap: 0.5rem;
@@ -49,11 +55,15 @@ const Card = styled.article`
   ${props => props.$border && 'border: 2px solid white;'}
   height: 25rem;
   position: relative;
-  @media screen and (min-width: 768px) {
+  width: 100%;
+  max-width: 100%;
+
+  ${theme.media.tablet} {
     width: 550px;
     height: 400px;
   }
-  @media screen and (min-width: 1024px) {
+
+  ${theme.media.desktop} {
     width: 550px;
     height: 380px;
   }
@@ -66,7 +76,8 @@ const P = styled.p`
   font-size: ${props => (props.size ? props.size : '1rem')};
   text-align: ${props => props.align || ''};
   font-weight: ${props => props.$weight || ''};
-  @media screen and (min-width: 1024px) {
+
+  ${theme.media.desktop} {
     font-size: ${props => props.$desktopSize || '1rem'};
   }
 `;
@@ -78,7 +89,12 @@ const H3 = styled.h3`
   font-weight: 900;
   margin: ${props => props.$margin || '0'};
   word-break: keep-all;
-  @media screen and (min-width: 1024px) {
+
+  ${theme.media.mobile} {
+    font-size: 1.375rem;
+  }
+
+  ${theme.media.desktop} {
     font-size: 1.2rem;
   }
 `;

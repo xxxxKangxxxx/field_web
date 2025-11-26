@@ -28,8 +28,17 @@ const SwiperContainer = styled.div`
 
 const NanumH2 = styled(H2)`
   font-family: 'Nanum Myeongjo', serif;
-  @media screen and (min-width: 768px) {
+
+  ${theme.media.mobile} {
+    font-size: 1.625rem;
+  }
+
+  ${theme.media.tablet} {
     font-size: 1.5rem;
+  }
+
+  ${theme.media.desktop} {
+    font-size: 1.875rem;
   }
 `;
 

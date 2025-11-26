@@ -5,7 +5,11 @@ import theme from '../../theme';
 const InputContainer = styled.div`
   position: relative;
   width: 100%;
+  max-width: 100%;
   z-index: 1;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 `;
 
 const TextArea = styled.textarea`
@@ -36,6 +40,11 @@ const InputLabel = styled.label`
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
+  max-width: 100%;
+  align-items: flex-start;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 `;
 
 const LabelText = styled.div`
@@ -45,6 +54,8 @@ const LabelText = styled.div`
   color: ${props => props.theme.colors.white};
   font-size: 0.85rem;
   font-weight: 500;
+  width: 100%;
+  justify-content: flex-start;
 `;
 
 const Input = styled.input`

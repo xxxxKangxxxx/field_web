@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import theme from '../../theme';
 import api from '../../api/axios';
 import { useSelector } from 'react-redux';
 
@@ -12,7 +13,11 @@ const EditorContainer = styled.div`
   max-width: 1000px;
   margin: 0 auto;
 
-  @media (max-width: 768px) {
+  ${theme.media.tablet} {
+    padding: 2rem 4%;
+  }
+
+  ${theme.media.mobile} {
     padding: 2rem 3%;
   }
 `;
@@ -23,7 +28,7 @@ const Title = styled.h1`
   margin-bottom: 2.5rem;
   color: ${props => props.theme.colors.white};
 
-  @media (max-width: 768px) {
+  ${theme.media.mobile} {
     font-size: 1.5rem;
     margin-bottom: 2rem;
   }
@@ -276,7 +281,7 @@ const BackButton = styled.button`
     transform: translateX(0);
   }
 
-  @media (max-width: 768px) {
+  ${theme.media.mobile} {
     padding: 0.45rem 0.875rem;
   }
 `;

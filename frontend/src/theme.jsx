@@ -10,6 +10,16 @@ const theme = {
     skyblue: '#1E9AF4',
     transparent: 'transparent',
   },
+  breakpoints: {
+    mobile: '767px',
+    tablet: '1023px',
+    desktop: '1024px',
+  },
+  media: {
+    mobile: `@media (max-width: 767px)`,
+    tablet: `@media (max-width: 1023px)`,
+    desktop: `@media (min-width: 1024px)`,
+  },
 };
 
 export default theme;

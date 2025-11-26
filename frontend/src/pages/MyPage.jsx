@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import theme from '../theme';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
@@ -9,6 +10,16 @@ const Container = styled.div`
   max-width: 800px;
   margin: 2rem auto;
   padding: 2rem;
+
+  ${theme.media.tablet} {
+    padding: 1.5rem;
+    margin: 1.5rem auto;
+  }
+
+  ${theme.media.mobile} {
+    padding: 1rem;
+    margin: 1rem auto;
+  }
 `;
 
 const Title = styled.h1`

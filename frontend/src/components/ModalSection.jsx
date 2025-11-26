@@ -12,11 +12,24 @@ const IconWrapper = styled.div`
   align-items: center;
   gap: 0.25rem;
   margin: ${props => (props.$margin ? props.$margin : '2rem 0 1rem 0 ')};
+  cursor: pointer;
+
+  ${theme.media.mobile} {
+    gap: 0.2rem;
+    margin: ${props => (props.$margin ? props.$margin : '1.5rem 0 0.75rem 0 ')};
+  }
 `;
 
 const IconImg = styled.img`
   width: auto;
   height: auto;
+  min-width: 44px;
+  min-height: 44px;
+
+  ${theme.media.mobile} {
+    width: 36px;
+    height: 36px;
+  }
 `;
 
 const H2 = styled.h2`
@@ -24,6 +37,14 @@ const H2 = styled.h2`
   color: ${props => (props.$color ? theme.colors[props.$color] : 'white')};
   font-family: ${props => (props.$font ? props.$font : '')};
   font-weight: 900;
+
+  ${theme.media.tablet} {
+    font-size: ${props => (props.$size ? `calc(${props.$size} * 0.9)` : '1.5rem')};
+  }
+
+  ${theme.media.mobile} {
+    font-size: ${props => (props.$size ? `calc(${props.$size} * 0.85)` : '1.375rem')};
+  }
 `;
 
 const ModalBackground = styled.section`

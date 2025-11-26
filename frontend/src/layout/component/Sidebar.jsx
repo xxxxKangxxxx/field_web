@@ -40,6 +40,11 @@ const IconWrapper = styled.aside`
   bottom: 5%;
   right: 1rem;
   z-index: 2;
+
+  ${theme.media.mobile} {
+    right: 0.75rem;
+    bottom: 4%;
+  }
 `;
 
 const commonIconStyle = `
@@ -52,6 +57,15 @@ const commonIconStyle = `
       display: flex;
   justify-content: center;
   align-items: center;
+  min-width: 48px;
+  min-height: 48px;
+
+  ${theme.media.mobile} {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    min-height: 52px;
+  }
 `;
 
 const BaseIconButton = styled.button`

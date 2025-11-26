@@ -2,6 +2,7 @@ import {AnimatePresence, motion, useAnimation} from 'framer-motion'; // framer-m
 import {useEffect} from 'react'; // 리액트의 useEffect 훅을 불러옵니다.
 import {v4 as uuidv4} from 'uuid'; // uuid 라이브러리에서 v4를 불러옵니다.
 import styled from 'styled-components'; // styled-components를 불러옵니다.
+import theme from '../theme';
 
 // 텍스트 애니메이션을 담당하는 컨테이너를 스타일드 컴포넌트로 정의합니다.
 const TextGenerateContainer = styled.span`
@@ -13,7 +14,7 @@ const TextGenerateContainer = styled.span`
   margin: ${props => props.$margin || ''};
   letter-spacing: ${props => props.$spacing || ''};
   text-rendering: optimizeSpeed;
-  @media screen and (min-width: 1024px) {
+  ${theme.media.desktop} {
     font-size: ${props => props.$desktopSize || ''};
     align-self: ${props => props.$justify || ''};
     text-align: ${props => props.$desktopAlign || ''};

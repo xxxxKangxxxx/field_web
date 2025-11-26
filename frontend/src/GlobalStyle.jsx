@@ -3,19 +3,28 @@ import theme from './theme';
 import './index.css';
 
 const GlobalStyle = createGlobalStyle`
-html{
+html {
     font-family: "SUIT", sans-serif;
     background-color: ${theme.colors.black};
     color: ${theme.colors.white};
+    font-size: 16px;
 
-    @media (min-width: 768px) {
+    ${theme.media.tablet} {
+        font-size: 16px;
+    }
+
+    ${theme.media.desktop} {
   font-size: 20px;
   }
-},
-body
-{
+}
+
+body {
     line-height: 200%;
-},
+    
+    ${theme.media.mobile} {
+        line-height: 180%;
+    }
+}
 div,
 span,
 applet,

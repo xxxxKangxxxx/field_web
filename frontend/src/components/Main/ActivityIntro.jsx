@@ -10,10 +10,13 @@ const P = styled.p`
   font-size: 1.25rem;
   font-weight: 900;
   text-align: center;
-  @media screen and (min-width: 768px) {
+
+  ${theme.media.tablet} {
     margin: 6rem 0 0 0;
+    font-size: 1.125rem;
   }
-  @media screen and (min-width: 896px) {
+
+  ${theme.media.desktop} {
     margin: 7rem 0 0 0;
     font-size: 18px;
   }
@@ -30,10 +33,18 @@ const Card = styled.article`
   object-fill: fill;
   aspect-ratio: 1/1.2;
   border-radius: 0.625rem;
+  width: 100%;
+  max-width: 100%;
   ${props => props.$border && 'border: 2px solid white;'}
-  @media screen and (min-width: 768px) {
+
+  ${theme.media.mobile} {
+    padding: 1.5rem 0.75rem;
+  }
+
+  ${theme.media.tablet} {
     width: 550px;
     height: 400px;
+    padding: 2rem 1rem;
   }
 `;
 
@@ -51,7 +62,13 @@ const CardTitle = styled(H3)`
   border-radius: 0.625rem;
   padding: 0.3rem 1.5rem;
   font-weight: 700;
-  @media screen and (min-width: 896px) {
+
+  ${theme.media.mobile} {
+    font-size: 0.9rem;
+    padding: 0.25rem 1.25rem;
+  }
+
+  ${theme.media.tablet} {
     font-size: 1rem;
   }
 `;

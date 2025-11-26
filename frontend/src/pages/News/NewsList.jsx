@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import theme from '../../theme';
 import api from '../../api/axios';
 import { useSelector } from 'react-redux';
 
@@ -8,7 +9,11 @@ const NewsListContainer = styled.div`
   padding: 2rem 15%;
   min-height: calc(100vh - 58px);
 
-  @media (max-width: 768px) {
+  ${theme.media.tablet} {
+    padding: 2rem 7.5%;
+  }
+
+  ${theme.media.mobile} {
     padding: 2rem 3%;
   }
 `;
@@ -24,6 +29,10 @@ const Title = styled.h1`
   font-size: 1.6rem;
   color: ${props => props.theme.colors.white};
   margin: 0;
+
+  ${theme.media.mobile} {
+    font-size: 1.4rem;
+  }
 `;
 
 const CategoryNav = styled.nav`
@@ -49,6 +58,12 @@ const CategoryButton = styled.button`
   transition: all 0.2s ease;
   font-size: 0.725rem;
   font-weight: 500;
+  min-height: 44px;
+
+  ${theme.media.mobile} {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.7rem;
+  }
 
   &:hover {
     background: ${props => props.$isActive ? props.theme.colors.white : 'rgba(255, 255, 255, 0.1)'};
@@ -70,6 +85,14 @@ const CreateButton = styled(Link)`
   font-weight: 500;
   font-size: 0.65rem;
   transition: opacity 0.2s ease;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+
+  ${theme.media.mobile} {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.7rem;
+  }
 
   &:hover {
     opacity: 0.8;
@@ -81,8 +104,13 @@ const NewsGrid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
   gap: 1rem;
 
-  @media (max-width: 768px) {
+  ${theme.media.tablet} {
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  }
+
+  ${theme.media.mobile} {
     grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 `;
 
@@ -97,6 +125,10 @@ const NewsCard = styled(Link)`
   height: 130px;
   width: 100%;
 
+  ${theme.media.mobile} {
+    height: 120px;
+  }
+
   &:hover {
     transform: translateY(-3px);
   }
@@ -107,6 +139,11 @@ const NewsImage = styled.img`
   height: 130px;
   object-fit: cover;
   flex-shrink: 0;
+
+  ${theme.media.mobile} {
+    width: 100px;
+    height: 120px;
+  }
 `;
 
 const NewsContent = styled.div`
@@ -144,6 +181,11 @@ const NewsTitle = styled.h3`
   text-overflow: ellipsis;
   margin-top: 0.5rem;
   margin-bottom: 2rem;
+
+  ${theme.media.mobile} {
+    font-size: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const NewsInfo = styled.div`
@@ -205,6 +247,15 @@ const ActionButton = styled.button`
   cursor: pointer;
   padding: 0.2rem;
   transition: color 0.2s ease;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ${theme.media.mobile} {
+    padding: 0.3rem;
+  }
 
   &:hover {
     color: ${props => props.theme.colors.white};

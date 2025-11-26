@@ -21,14 +21,28 @@ const ModalContent = styled.div`
   background: #1a1a1a;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-width: 90%;
+  max-height: 90vh;
+  overflow: auto;
+
+  ${theme.media.tablet} {
+    max-width: 85%;
+  }
+
+  ${theme.media.mobile} {
+    max-width: 95%;
+    max-height: 95vh;
+  }
 `;
 
 const CloseButton = styled.button`
   position: absolute;
   top: 10px;
   right: 10px;
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border: none;
   background: none;
   cursor: pointer;
@@ -71,6 +85,12 @@ const ListContainer = styled.ul`
   max-height: 300px;
   width: 100%;
   padding: 2rem;
+
+  ${theme.media.mobile} {
+    gap: 3%;
+    padding: 1.5rem;
+    max-height: 250px;
+  }
 `;
 
 const ListItem = styled.li`
@@ -79,6 +99,16 @@ const ListItem = styled.li`
   color: ${theme.colors.yellow};
   margin: 1rem 0;
   cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  ${theme.media.mobile} {
+    width: 48%;
+    font-size: 0.9rem;
+    margin: 0.75rem 0;
+  }
 `;
 
 function Modal({ 
