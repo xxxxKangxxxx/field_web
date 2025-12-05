@@ -266,14 +266,23 @@ const Span = styled.span`
   }
 `;
 
-function DepartmentIntro() {
-  const [selectCategory, setSelectCategory] = useState('기획부');
-  const category = ['기획부', '대외협력부', '컴페티션부', '홍보부'];
+function DepartmentIntro({ selectedDepartment, setSelectedDepartment }) {
+  const [selectCategory, setSelectCategory] = useState(selectedDepartment || '기획부');
+  const category = ['기획부', '컴페티션부', '홍보부', '대외협력부'];
   const [animate, setAnimate] = useState(false);
   const cardRef = useRef(null);
+  
   const handleButtonClick = item => {
     setSelectCategory(item);
+    setSelectedDepartment(item);
   };
+
+  // prop과 로컬 상태 동기화
+  useEffect(() => {
+    if (selectedDepartment) {
+      setSelectCategory(selectedDepartment);
+    }
+  }, [selectedDepartment]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(entries => {

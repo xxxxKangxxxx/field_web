@@ -36,16 +36,32 @@ export class User {
   password: string;
 
   @Prop({
-    required: [true, '소속은 필수 입력 항목입니다.'],
+    required: [true, '회원 유형은 필수 입력 항목입니다.'],
+    enum: {
+      values: ['FIELD', 'GENERAL'],
+      message: '유효하지 않은 회원 유형입니다.',
+    },
+  })
+  memberType: string;
+
+  @Prop({
+    required: false,
+    min: [1, '기수는 1 이상이어야 합니다.'],
+    max: [18, '기수는 18 이하여야 합니다.'],
+  })
+  generation?: number;
+
+  @Prop({
+    required: false,
     enum: {
       values: ['대외협력부', '총기획단', '기획부', '컴페티션부', '홍보부'],
       message: '유효하지 않은 소속입니다.',
     },
   })
-  department: string;
+  department?: string;
 
   @Prop({
-    required: [true, '직책은 필수 입력 항목입니다.'],
+    required: false,
     enum: {
       values: [
         '대외협력부장',
@@ -59,7 +75,7 @@ export class User {
       message: '유효하지 않은 직책입니다.',
     },
   })
-  position: string;
+  position?: string;
 
   @Prop({ default: false })
   isAdmin: boolean;

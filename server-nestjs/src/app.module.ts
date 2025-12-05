@@ -32,7 +32,6 @@ import { QuestionsModule } from './questions/questions.module';
         if (!uri) {
           throw new Error('MONGO_URI가 .env 파일에 설정되지 않았습니다!');
         }
-        console.log('🔗 MongoDB 연결 시도:', uri.replace(/:[^:@]+@/, ':****@')); // 비밀번호 마스킹
         
         // URI에 이미 authSource가 포함되어 있으면 옵션에서 제거
         // Mongoose는 URI의 쿼리 파라미터를 우선시하므로 옵션과 중복되면 충돌할 수 있음

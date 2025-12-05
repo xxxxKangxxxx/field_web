@@ -502,23 +502,8 @@ const NewsEditor = () => {
       formDataToSend.append('content', formData.content);
       formDataToSend.append('category', formData.category);
       
-      console.log('선택된 파일:', selectedFile);
       if (selectedFile) {
-        console.log('파일 정보:', {
-          name: selectedFile.name,
-          size: selectedFile.size,
-          type: selectedFile.type
-        });
         formDataToSend.append('file', selectedFile);
-        console.log('FormData에 파일 추가됨');
-      } else {
-        console.log('파일이 선택되지 않음');
-      }
-
-      // FormData 내용 확인
-      console.log('FormData entries:');
-      for (let pair of formDataToSend.entries()) {
-        console.log(pair[0] + ': ', pair[1]);
       }
 
       // 토큰 가져오기 (redux state 또는 localStorage)
@@ -541,7 +526,6 @@ const NewsEditor = () => {
       }
       navigate('/news');
     } catch (error) {
-      console.error('저장 실패:', error);
       const errorMessage = error.response?.data?.message || error.message || '저장에 실패했습니다. 다시 시도해주세요.';
       alert(errorMessage);
     } finally {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import DepartmentSection from '../components/About/DepartmentSection';
 import ManagerIntro from '../components/About/ManagerIntro';
@@ -17,13 +17,18 @@ const AccessibilityHidden = styled.h1`
 `;
 
 function AboutPage() {
+  const [selectedDepartment, setSelectedDepartment] = useState('기획부');
+
   return (
     <>
       <AccessibilityHidden>어바웃 필드</AccessibilityHidden>
       <TitleSection />
       <TimelineSection />
-      <ManagerIntro />
-      <DepartmentSection />
+      <ManagerIntro selectedDepartment={selectedDepartment} />
+      <DepartmentSection 
+        selectedDepartment={selectedDepartment}
+        setSelectedDepartment={setSelectedDepartment}
+      />
     </>
   );
 }

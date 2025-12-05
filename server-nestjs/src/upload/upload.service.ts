@@ -53,7 +53,6 @@ export class UploadService {
   ): Promise<{ key: string; url: string | null }> {
     // S3 설정 확인
     if (!this.bucketName) {
-      console.error('AWS_S3_BUCKET_NAME이 설정되지 않았습니다.');
       throw new Error('S3 버킷 이름이 설정되지 않았습니다.');
     }
 
@@ -70,19 +69,10 @@ export class UploadService {
     });
 
     try {
-      console.log(`S3 업로드 시도: ${this.bucketName}/${key}`);
       await this.s3Client.send(command);
-      console.log(`S3 업로드 성공: ${key}`);
       const fileUrl = this.getFileUrl(key);
       return { key, url: fileUrl };
     } catch (error) {
-      console.error('S3 업로드 실패:', error);
-      console.error('에러 상세:', {
-        message: error.message,
-        code: error.code,
-        bucketName: this.bucketName,
-        key: key,
-      });
       throw new Error(`파일 업로드 중 오류가 발생했습니다: ${error.message}`);
     }
   }

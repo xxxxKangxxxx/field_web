@@ -325,13 +325,63 @@ const LoginLink = styled(Link)`
   }
 `;
 
+const MemberTypeOptions = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`;
+
+const MemberTypeOption = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 2px solid ${props => props.$selected ? '#FFD700' : 'rgba(255, 255, 255, 0.2)'};
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: ${props => props.$selected ? 'rgba(255, 215, 0, 0.1)' : 'rgba(255, 255, 255, 0.05)'};
+
+  &:hover {
+    border-color: ${props => props.$selected ? '#FFD700' : 'rgba(255, 255, 255, 0.4)'};
+    background: ${props => props.$selected ? 'rgba(255, 215, 0, 0.15)' : 'rgba(255, 255, 255, 0.08)'};
+  }
+
+  input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #FFD700;
+  }
+`;
+
+const OptionContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+`;
+
+const OptionTitle = styled.span`
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+`;
+
+const OptionDescription = styled.span`
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+`;
+
 const SignupPage = () => {
   const navigate = useNavigate();
+  const [memberType, setMemberType] = useState(''); // 'FIELD' or 'GENERAL' or ''
   const [formData, setFormData] = useState({
     email: '',
     name: '',
     password: '',
     confirmPassword: '',
+    generation: '',  // 기수
     department: '',  // 소속
     position: ''     // 직책
   });
@@ -362,6 +412,8 @@ const SignupPage = () => {
     '대외협력부장',
     '부원'
   ];
+
+  const generations = Array.from({ length: 18 }, (_, i) => i + 1); // 1~18기
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -466,19 +518,37 @@ const SignupPage = () => {
       return setError('비밀번호가 일치하지 않습니다.');
     }
 
-    if (!formData.department || !formData.position) {
-      return setError('소속과 직책을 선택해주세요.');
+    if (!memberType) {
+      return setError('회원 유형을 선택해주세요.');
+    }
+
+    // FIELD 부원인 경우 추가 필드 검증
+    if (memberType === 'FIELD') {
+      if (!formData.generation) {
+        return setError('기수를 선택해주세요.');
+      }
+      if (!formData.department || !formData.position) {
+        return setError('소속과 직책을 선택해주세요.');
+      }
     }
 
     try {
+      const requestData = {
+        email: formData.email,
+        name: formData.name,
+        password: formData.password,
+        memberType: memberType
+      };
+
+      // FIELD 부원인 경우 추가 필드 포함
+      if (memberType === 'FIELD') {
+        requestData.generation = parseInt(formData.generation);
+        requestData.department = formData.department;
+        requestData.position = formData.position;
+      }
+
       const response = await api.post('/api/auth/register', 
-        {
-          email: formData.email,
-          name: formData.name,
-          password: formData.password,
-          department: formData.department,
-          position: formData.position
-        },
+        requestData,
         {
           headers: {
             'Content-Type': 'application/json'
@@ -487,7 +557,7 @@ const SignupPage = () => {
       );
       
       if (response.data.message) {
-      navigate('/login');
+        navigate('/login');
       }
     } catch (err) {
       setError(
@@ -531,6 +601,7 @@ const SignupPage = () => {
               )}
             </InputWrapper>
           </InputGroup>
+
           <InputGroup>
             <Label htmlFor="name">이름</Label>
             <Input
@@ -544,6 +615,7 @@ const SignupPage = () => {
               required
             />
           </InputGroup>
+
           <InputGroup>
             <Label htmlFor="password">비밀번호</Label>
             <Input
@@ -557,6 +629,7 @@ const SignupPage = () => {
               required
             />
           </InputGroup>
+
           <InputGroup>
             <Label htmlFor="confirmPassword">비밀번호 확인</Label>
             <Input
@@ -570,40 +643,98 @@ const SignupPage = () => {
               required
             />
           </InputGroup>
+
           <InputGroup>
-            <Label htmlFor="department">소속</Label>
-            <SelectWrapper>
-              <Select
-                id="department"
-                name="department"
-                value={formData.department}
-                onChange={handleChange}
-                required
-              >
-                <option value="">소속을 선택하세요</option>
-                {departments.map(dept => (
-                  <option key={dept} value={dept}>{dept}</option>
-                ))}
-              </Select>
-            </SelectWrapper>
+            <Label>회원 유형</Label>
+            <MemberTypeOptions>
+              <MemberTypeOption $selected={memberType === 'FIELD'}>
+                <input
+                  type="radio"
+                  name="memberType"
+                  value="FIELD"
+                  checked={memberType === 'FIELD'}
+                  onChange={(e) => setMemberType(e.target.value)}
+                />
+                <OptionContent>
+                  <OptionTitle>FIELD 동아리 부원</OptionTitle>
+                  <OptionDescription>FIELD 동아리 활동을 하신 적 있으신가요?</OptionDescription>
+                </OptionContent>
+              </MemberTypeOption>
+              <MemberTypeOption $selected={memberType === 'GENERAL'}>
+                <input
+                  type="radio"
+                  name="memberType"
+                  value="GENERAL"
+                  checked={memberType === 'GENERAL'}
+                  onChange={(e) => setMemberType(e.target.value)}
+                />
+                <OptionContent>
+                  <OptionTitle>일반 회원</OptionTitle>
+                  <OptionDescription>기본 정보만 입력</OptionDescription>
+                </OptionContent>
+              </MemberTypeOption>
+            </MemberTypeOptions>
           </InputGroup>
-          <InputGroup>
-            <Label htmlFor="position">직책</Label>
-            <SelectWrapper>
-              <Select
-                id="position"
-                name="position"
-                value={formData.position}
-                onChange={handleChange}
-                required
-              >
-                <option value="">직책을 선택하세요</option>
-                {positions.map(pos => (
-                  <option key={pos} value={pos}>{pos}</option>
-                ))}
-              </Select>
-            </SelectWrapper>
-          </InputGroup>
+
+          {/* FIELD 부원인 경우에만 추가 필드 표시 */}
+          {memberType === 'FIELD' && (
+            <>
+              <InputGroup>
+                <Label htmlFor="generation">기수</Label>
+                <SelectWrapper>
+                  <Select
+                    id="generation"
+                    name="generation"
+                    value={formData.generation}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">기수를 선택하세요</option>
+                    {generations.map(gen => (
+                      <option key={gen} value={gen}>{gen}기</option>
+                    ))}
+                  </Select>
+                </SelectWrapper>
+              </InputGroup>
+
+              <InputGroup>
+                <Label htmlFor="department">소속</Label>
+                <SelectWrapper>
+                  <Select
+                    id="department"
+                    name="department"
+                    value={formData.department}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">소속을 선택하세요</option>
+                    {departments.map(dept => (
+                      <option key={dept} value={dept}>{dept}</option>
+                    ))}
+                  </Select>
+                </SelectWrapper>
+              </InputGroup>
+
+              <InputGroup>
+                <Label htmlFor="position">직책</Label>
+                <SelectWrapper>
+                  <Select
+                    id="position"
+                    name="position"
+                    value={formData.position}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="">직책을 선택하세요</option>
+                    {positions.map(pos => (
+                      <option key={pos} value={pos}>{pos}</option>
+                    ))}
+                  </Select>
+                </SelectWrapper>
+              </InputGroup>
+            </>
+          )}
+
           <RegisterButton type="submit">가입하기</RegisterButton>
           {error && <ErrorMessage>{error}</ErrorMessage>}
         </Form>

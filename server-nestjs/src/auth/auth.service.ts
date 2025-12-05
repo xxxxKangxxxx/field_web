@@ -78,17 +78,25 @@ import {
       // 인증 정보 삭제
       await this.verificationService.deleteVerification(registerDto.email);
   
-      return {
+      const response: any = {
         message: '회원가입이 완료되었습니다.',
         user: {
           email: user.email,
           name: user.name,
-          department: user.department,
-          position: user.position,
+          memberType: user.memberType,
           isAdmin: user.isAdmin,
           isSuperAdmin: user.isSuperAdmin,
         },
       };
+
+      // FIELD 회원인 경우 추가 정보 포함
+      if (user.memberType === 'FIELD') {
+        response.user.generation = user.generation;
+        response.user.department = user.department;
+        response.user.position = user.position;
+      }
+
+      return response;
     }
   
     /**
@@ -130,33 +138,47 @@ import {
       }
   
       // JWT 토큰 생성
-      const payload = {
+      const payload: any = {
         id: user._id.toString(),
         email: user.email,
         name: user.name,
-        department: user.department,
-        position: user.position,
+        memberType: user.memberType,
         isAdmin: user.isAdmin,
         isSuperAdmin: user.isSuperAdmin,
       };
+
+      // FIELD 회원인 경우 추가 정보 포함
+      if (user.memberType === 'FIELD') {
+        payload.generation = user.generation;
+        payload.department = user.department;
+        payload.position = user.position;
+      }
   
       const token = this.jwtService.sign(payload);
   
       // activeToken 저장
       await this.usersService.updateActiveToken(user._id.toString(), token);
   
-      return {
+      const response: any = {
         message: '로그인 성공',
         token,
         user: {
           email: user.email,
           name: user.name,
-          department: user.department,
-          position: user.position,
+          memberType: user.memberType,
           isAdmin: user.isAdmin,
           isSuperAdmin: user.isSuperAdmin,
         },
       };
+
+      // FIELD 회원인 경우 추가 정보 포함
+      if (user.memberType === 'FIELD') {
+        response.user.generation = user.generation;
+        response.user.department = user.department;
+        response.user.position = user.position;
+      }
+
+      return response;
     }
   
     /**
@@ -183,14 +205,22 @@ import {
             );
         }
 
-        return {
+        const response: any = {
             email: user.email,
             name: user.name,
-            department: user.department,
-            position: user.position,
+            memberType: user.memberType,
             isAdmin: user.isAdmin,
             isSuperAdmin: user.isSuperAdmin,
             createdAt: user.createdAt,
         };
+
+        // FIELD 회원인 경우 추가 정보 포함
+        if (user.memberType === 'FIELD') {
+            response.generation = user.generation;
+            response.department = user.department;
+            response.position = user.position;
+        }
+
+        return response;
     }
 }

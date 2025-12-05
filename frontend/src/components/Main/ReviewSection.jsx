@@ -64,8 +64,8 @@ const Card = styled.article`
   }
 
   ${theme.media.desktop} {
-    width: 550px;
-    height: 380px;
+    width: 420px;
+    height: 320px;
   }
 `;
 

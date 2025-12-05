@@ -100,17 +100,11 @@ export class NewsService {
           }
         }
         
-        console.log('원본 파일명:', file.originalname);
-        console.log('디코딩된 파일명:', decodedFileName);
-        console.log('파일 업로드 시작:', decodedFileName, file.size, 'bytes');
-        
         const uploadResult = await this.uploadService.uploadFile(file, 'news');
         fileKey = uploadResult.key;
         fileName = decodedFileName;
         fileType = file.mimetype;
-        console.log('파일 업로드 완료:', fileKey);
       } catch (error) {
-        console.error('파일 업로드 실패:', error);
         throw error;
       }
     }

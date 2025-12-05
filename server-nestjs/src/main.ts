@@ -46,6 +46,5 @@ async function bootstrap() {
   // Nest.js 서버는 포트 4002 사용 (Express는 4001)
   const port = process.env.PORT || 4002;
   await app.listen(port);
-  console.log(`🚀 Nest.js 서버 실행 중: http://localhost:${port}`);
 }
 bootstrap();

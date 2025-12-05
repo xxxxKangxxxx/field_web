@@ -350,12 +350,6 @@ const NewsDetail = () => {
     const fetchNews = async () => {
       try {
         const response = await api.get(`/api/news/${id}`);
-        console.log('News data:', response.data);
-        console.log('File info:', {
-          fileUrl: response.data.fileUrl,
-          fileName: response.data.fileName,
-          fileType: response.data.fileType
-        });
         setNews(response.data);
       } catch (error) {
         if (error.response?.status === 401) {
@@ -461,7 +455,6 @@ const NewsDetail = () => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('파일 다운로드 오류:', error);
       alert('파일 다운로드에 실패했습니다.');
     }
   };

@@ -10,10 +10,13 @@ const MainSection = styled.section`
   }
 `;
 
-function DepartmentSection() {
+function DepartmentSection({ selectedDepartment, setSelectedDepartment }) {
   return (
     <MainSection>
-      <DepartmentIntro />
+      <DepartmentIntro 
+        selectedDepartment={selectedDepartment}
+        setSelectedDepartment={setSelectedDepartment}
+      />
     </MainSection>
   );
 }

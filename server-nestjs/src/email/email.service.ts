@@ -123,7 +123,6 @@ export class EmailService {
       const command = new SendEmailCommand(params);
       await this.sesClient.send(command);
     } catch (error) {
-      console.error('SES 이메일 발송 실패:', error);
       throw new Error('이메일 발송에 실패했습니다.');
     }
   }
@@ -157,7 +156,6 @@ export class EmailService {
       const transporter = this.getTransporter();
       await transporter.sendMail(mailOptions);
     } catch (error) {
-      console.error('이메일 발송 실패:', error);
       throw new Error('이메일 발송에 실패했습니다.');
     }
   }

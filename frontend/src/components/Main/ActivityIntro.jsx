@@ -46,6 +46,12 @@ const Card = styled.article`
     height: 400px;
     padding: 2rem 1rem;
   }
+
+  ${theme.media.desktop} {
+    width: 420px;
+    height: 320px;
+    padding: 2rem 1rem;
+  }
 `;
 
 const H3 = styled.h3`
