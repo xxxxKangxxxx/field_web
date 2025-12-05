@@ -223,4 +223,55 @@ import {
 
         return response;
     }
+
+    /**
+     * 비밀번호 찾기 - 인증번호 발송
+     */
+    async forgotPassword(email: string) {
+      // 사용자 확인
+      const user = await this.usersService.findByEmail(email);
+      if (!user) {
+        throw new BadRequestException('등록되지 않은 이메일입니다.');
+      }
+
+      // 인증번호 생성
+      const code = this.emailService.generateVerificationCode();
+
+      // 인증번호 저장
+      await this.verificationService.createVerification(email, code);
+
+      // 이메일 발송
+      await this.emailService.sendVerificationEmail(email, code);
+
+      return {
+        message: '인증번호가 이메일로 발송되었습니다.',
+      };
+    }
+
+    /**
+     * 비밀번호 재설정
+     */
+    async resetPassword(email: string, code: string, newPassword: string) {
+      // 사용자 확인
+      const user = await this.usersService.findByEmail(email);
+      if (!user) {
+        throw new BadRequestException('등록되지 않은 이메일입니다.');
+      }
+
+      // 인증번호 확인
+      const isValid = await this.verificationService.verifyCode(email, code);
+      if (!isValid) {
+        throw new BadRequestException('인증번호가 일치하지 않습니다.');
+      }
+
+      // 비밀번호 업데이트
+      await this.usersService.updatePassword(user._id.toString(), newPassword);
+
+      // 인증 정보 삭제
+      await this.verificationService.deleteVerification(email);
+
+      return {
+        message: '비밀번호가 성공적으로 변경되었습니다.',
+      };
+    }
 }

@@ -179,4 +179,16 @@ export class UsersService {
 
     await this.userModel.findByIdAndDelete(userId).exec();
   }
+
+  /**
+   * 비밀번호 직접 업데이트 (비밀번호 재설정용)
+   */
+  async updatePassword(userId: string, newPassword: string): Promise<void> {
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    await this.userModel.findByIdAndUpdate(userId, {
+      password: hashedPassword,
+    }).exec();
+  }
 }

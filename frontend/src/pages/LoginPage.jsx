@@ -120,12 +120,15 @@ const ErrorMessage = styled.p`
   margin-top: 1rem;
 `;
 
-const RegisterLink = styled(Link)`
-  display: block;
+const LinksWrapper = styled.div`
   text-align: center;
+  margin-top: 1.5rem;
+`;
+
+const RegisterLink = styled(Link)`
+  display: inline-block;
   color: rgba(255, 255, 255, 0.7);
   font-size: 14px;
-  margin-top: 1.5rem;
   text-decoration: none;
   transition: color 0.2s ease;
 
@@ -134,12 +137,120 @@ const RegisterLink = styled(Link)`
   }
 `;
 
+const ForgotPasswordLink = styled.button`
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  margin-left: 1rem;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 0;
+
+  &::before {
+    content: '|';
+    margin-right: 1rem;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  &:hover {
+    color: #fff;
+  }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+`;
+
+const ModalContent = styled.div`
+  width: 100%;
+  max-width: 450px;
+  padding: 2.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+
+  ${theme.media.mobile} {
+    padding: 2rem 1.5rem;
+    max-width: 95%;
+  }
+`;
+
+const ModalTitle = styled.h3`
+  font-size: 24px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 2rem;
+  text-align: center;
+
+  ${theme.media.mobile} {
+    font-size: 20px;
+    margin-bottom: 1.5rem;
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 32px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+
+  &:hover {
+    color: #fff;
+  }
+`;
+
+const SuccessMessage = styled.p`
+  color: #51cf66;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 1rem;
+`;
+
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
   const [error, setError] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotPasswordStep, setForgotPasswordStep] = useState(1); // 1: 이메일, 2: 인증번호, 3: 새 비밀번호
+  const [forgotPasswordData, setForgotPasswordData] = useState({
+    email: '',
+    code: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [forgotPasswordError, setForgotPasswordError] = useState('');
+  const [forgotPasswordSuccess, setForgotPasswordSuccess] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -178,6 +289,82 @@ const LoginPage = () => {
     }
   };
 
+  const handleForgotPasswordChange = (e) => {
+    const { name, value } = e.target;
+    setForgotPasswordData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSendVerificationCode = async (e) => {
+    e.preventDefault();
+    setForgotPasswordError('');
+    setForgotPasswordSuccess('');
+
+    try {
+      await api.post('/api/auth/forgot-password', {
+        email: forgotPasswordData.email
+      });
+      setForgotPasswordSuccess('인증번호가 이메일로 발송되었습니다.');
+      setForgotPasswordStep(2);
+    } catch (err) {
+      setForgotPasswordError(err.response?.data?.message || '인증번호 발송에 실패했습니다.');
+    }
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setForgotPasswordError('');
+    setForgotPasswordSuccess('');
+
+    if (forgotPasswordData.newPassword !== forgotPasswordData.confirmPassword) {
+      setForgotPasswordError('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
+    if (forgotPasswordStep === 2) {
+      // 인증번호 확인 단계
+      try {
+        await api.post('/api/auth/verify-email', {
+          email: forgotPasswordData.email,
+          code: forgotPasswordData.code
+        });
+        setForgotPasswordSuccess('인증이 완료되었습니다.');
+        setForgotPasswordStep(3);
+      } catch (err) {
+        setForgotPasswordError(err.response?.data?.message || '인증번호가 일치하지 않습니다.');
+      }
+    } else if (forgotPasswordStep === 3) {
+      // 비밀번호 재설정 단계
+      try {
+        await api.post('/api/auth/reset-password', {
+          email: forgotPasswordData.email,
+          code: forgotPasswordData.code,
+          newPassword: forgotPasswordData.newPassword
+        });
+        setForgotPasswordSuccess('비밀번호가 성공적으로 변경되었습니다.');
+        setTimeout(() => {
+          setShowForgotPassword(false);
+          setForgotPasswordStep(1);
+          setForgotPasswordData({ email: '', code: '', newPassword: '', confirmPassword: '' });
+          setForgotPasswordError('');
+          setForgotPasswordSuccess('');
+        }, 2000);
+      } catch (err) {
+        setForgotPasswordError(err.response?.data?.message || '비밀번호 재설정에 실패했습니다.');
+      }
+    }
+  };
+
+  const handleCloseForgotPassword = () => {
+    setShowForgotPassword(false);
+    setForgotPasswordStep(1);
+    setForgotPasswordData({ email: '', code: '', newPassword: '', confirmPassword: '' });
+    setForgotPasswordError('');
+    setForgotPasswordSuccess('');
+  };
+
   return (
     <LoginContainer>
       <LoginBox>
@@ -210,10 +397,96 @@ const LoginPage = () => {
           <LoginButton type="submit">로그인</LoginButton>
           {error && <ErrorMessage>{error}</ErrorMessage>}
         </Form>
-        <RegisterLink to="/signup">
-          계정이 없으신가요? 회원가입
-        </RegisterLink>
+        <LinksWrapper>
+          <RegisterLink to="/signup">
+            계정이 없으신가요? 회원가입
+          </RegisterLink>
+          <ForgotPasswordLink onClick={() => setShowForgotPassword(true)}>
+            비밀번호를 잊으셨나요?
+          </ForgotPasswordLink>
+        </LinksWrapper>
       </LoginBox>
+
+      {showForgotPassword && (
+        <ModalOverlay onClick={handleCloseForgotPassword}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <ModalTitle>비밀번호 찾기</ModalTitle>
+            <CloseButton onClick={handleCloseForgotPassword}>&times;</CloseButton>
+            
+            {forgotPasswordStep === 1 && (
+              <Form onSubmit={handleSendVerificationCode}>
+                <InputGroup>
+                  <Label htmlFor="forgot-email">이메일</Label>
+                  <Input
+                    id="forgot-email"
+                    type="email"
+                    name="email"
+                    value={forgotPasswordData.email}
+                    onChange={handleForgotPasswordChange}
+                    placeholder="가입하신 이메일을 입력하세요"
+                    required
+                  />
+                </InputGroup>
+                <LoginButton type="submit">인증번호 발송</LoginButton>
+                {forgotPasswordError && <ErrorMessage>{forgotPasswordError}</ErrorMessage>}
+                {forgotPasswordSuccess && <SuccessMessage>{forgotPasswordSuccess}</SuccessMessage>}
+              </Form>
+            )}
+
+            {forgotPasswordStep === 2 && (
+              <Form onSubmit={handleResetPassword}>
+                <InputGroup>
+                  <Label htmlFor="verification-code">인증번호</Label>
+                  <Input
+                    id="verification-code"
+                    type="text"
+                    name="code"
+                    value={forgotPasswordData.code}
+                    onChange={handleForgotPasswordChange}
+                    placeholder="이메일로 받은 인증번호를 입력하세요"
+                    required
+                  />
+                </InputGroup>
+                <LoginButton type="submit">인증 확인</LoginButton>
+                {forgotPasswordError && <ErrorMessage>{forgotPasswordError}</ErrorMessage>}
+                {forgotPasswordSuccess && <SuccessMessage>{forgotPasswordSuccess}</SuccessMessage>}
+              </Form>
+            )}
+
+            {forgotPasswordStep === 3 && (
+              <Form onSubmit={handleResetPassword}>
+                <InputGroup>
+                  <Label htmlFor="new-password">새 비밀번호</Label>
+                  <Input
+                    id="new-password"
+                    type="password"
+                    name="newPassword"
+                    value={forgotPasswordData.newPassword}
+                    onChange={handleForgotPasswordChange}
+                    placeholder="새 비밀번호를 입력하세요"
+                    required
+                  />
+                </InputGroup>
+                <InputGroup>
+                  <Label htmlFor="confirm-password">비밀번호 확인</Label>
+                  <Input
+                    id="confirm-password"
+                    type="password"
+                    name="confirmPassword"
+                    value={forgotPasswordData.confirmPassword}
+                    onChange={handleForgotPasswordChange}
+                    placeholder="비밀번호를 다시 입력하세요"
+                    required
+                  />
+                </InputGroup>
+                <LoginButton type="submit">비밀번호 재설정</LoginButton>
+                {forgotPasswordError && <ErrorMessage>{forgotPasswordError}</ErrorMessage>}
+                {forgotPasswordSuccess && <SuccessMessage>{forgotPasswordSuccess}</SuccessMessage>}
+              </Form>
+            )}
+          </ModalContent>
+        </ModalOverlay>
+      )}
     </LoginContainer>
   );
 };

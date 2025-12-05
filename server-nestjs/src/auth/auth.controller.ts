@@ -13,6 +13,8 @@ import {
   import { RegisterDto, LoginDto } from './dto';
   import { SendVerificationDto } from './dto/send-verification.dto';
   import { VerifyEmailDto } from './dto/verify-email.dto';
+  import { ForgotPasswordDto } from './dto/forgot-password.dto';
+  import { ResetPasswordDto } from './dto/reset-password.dto';
   import { JwtAuthGuard } from './guards';
   import { JwtPayload } from './strategies/jwt.strategy'; // 👈 [수정 2] Strategy의 Payload 타입 임포트
   
@@ -98,5 +100,27 @@ import {
         }
 
         return this.authService.getMe(req.user.id, token);
+    }
+
+    /**
+     * 비밀번호 찾기 - 인증번호 발송
+     * POST /auth/forgot-password
+     */
+    @Post('forgot-password')
+    async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto) {
+      return this.authService.forgotPassword(forgotPasswordDto.email);
+    }
+
+    /**
+     * 비밀번호 재설정
+     * POST /auth/reset-password
+     */
+    @Post('reset-password')
+    async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+      return this.authService.resetPassword(
+        resetPasswordDto.email,
+        resetPasswordDto.code,
+        resetPasswordDto.newPassword,
+      );
     }
   }
