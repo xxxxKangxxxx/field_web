@@ -379,6 +379,7 @@ const LoginPage = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="example@field.com"
+              autoComplete="email"
               required
             />
           </InputGroup>
@@ -391,6 +392,7 @@ const LoginPage = () => {
               value={formData.password}
               onChange={handleChange}
               placeholder="비밀번호를 입력하세요"
+              autoComplete="current-password"
               required
             />
           </InputGroup>
@@ -424,6 +426,7 @@ const LoginPage = () => {
                     value={forgotPasswordData.email}
                     onChange={handleForgotPasswordChange}
                     placeholder="가입하신 이메일을 입력하세요"
+                    autoComplete="email"
                     required
                   />
                 </InputGroup>
@@ -444,6 +447,7 @@ const LoginPage = () => {
                     value={forgotPasswordData.code}
                     onChange={handleForgotPasswordChange}
                     placeholder="이메일로 받은 인증번호를 입력하세요"
+                    autoComplete="one-time-code"
                     required
                   />
                 </InputGroup>
@@ -464,6 +468,7 @@ const LoginPage = () => {
                     value={forgotPasswordData.newPassword}
                     onChange={handleForgotPasswordChange}
                     placeholder="새 비밀번호를 입력하세요"
+                    autoComplete="new-password"
                     required
                   />
                 </InputGroup>
@@ -476,6 +481,7 @@ const LoginPage = () => {
                     value={forgotPasswordData.confirmPassword}
                     onChange={handleForgotPasswordChange}
                     placeholder="비밀번호를 다시 입력하세요"
+                    autoComplete="new-password"
                     required
                   />
                 </InputGroup>

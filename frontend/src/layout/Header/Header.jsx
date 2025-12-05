@@ -504,7 +504,7 @@ export default function Header() {
   const myPageRef = useRef(null);
   const scrollPositionRef = useRef(0);
   
-  const transparentHeaderPages = ['/about', '/camp', '/recruit'];
+  const transparentHeaderPages = ['/', '/about', '/camp', '/recruit'];
   const isTransparentHeader = transparentHeaderPages.includes(location.pathname);
 
   const isActivePath = (path) => {
