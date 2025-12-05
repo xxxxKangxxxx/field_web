@@ -198,6 +198,20 @@ const H3 = styled.h3`
 
 const CardContainer = styled.div`
   display: ${props => (props.$visible ? 'block' : 'none')};
+  opacity: 0;
+  animation: ${props => (props.$visible ? 'fadeIn 0.6s ease-out forwards' : 'none')};
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   @media screen and (min-width: 1280px) {
     margin: 3rem 0;
   }

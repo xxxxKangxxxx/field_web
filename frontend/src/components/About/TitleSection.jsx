@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 import theme from '../../theme';
 import TextGenerator from '../TextGenerator';
 
@@ -71,10 +71,23 @@ const Figure = styled.figure`
   }
 `;
 
+const bounce = keyframes`
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+`;
+
 const Icon = styled.img`
   width: 1.875rem;
   height: 1.875rem;
   order: 2;
+  animation: ${bounce} 2s ease-in-out infinite;
 `;
 
 const IconFigcaption = styled.figcaption`

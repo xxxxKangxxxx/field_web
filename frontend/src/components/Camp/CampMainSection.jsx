@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, {keyframes} from 'styled-components';
 import {Link} from 'react-router-dom';
 import Button from '../Button';
 
@@ -9,6 +9,14 @@ const H1 = styled.h1`
   font-family: 'Goblin One';
   font-size: 1.875rem;
   text-align: center;
+  opacity: 0;
+  animation: fadeIn 0.8s ease-out 0.2s forwards;
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
 `;
 
 const TitleContainer = styled.section`
@@ -18,7 +26,7 @@ const TitleContainer = styled.section`
   justify-content: center;
   align-items: center;
   position: relative;
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 1) 100%),
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 1) 100%),
     url(${props => props.src});
   background-position: center;
   background-size: cover;
@@ -29,6 +37,25 @@ const TitleH2 = styled.h2`
   font-size: 2.5rem;
   text-align: center;
   font-family: 'Nanum Brush Script';
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.8s ease-out forwards;
+
+  &:first-of-type {
+    animation-delay: 0.4s;
+  }
+
+  &:nth-of-type(2) {
+    animation-delay: 0.6s;
+  }
+
+  @keyframes fadeUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   @media screen and (min-width: 1024px) {
     margin: ${props => props.$margin || ''};
   }
@@ -45,10 +72,23 @@ const Figure = styled.figure`
   }
 `;
 
+const bounce = keyframes`
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+`;
+
 const Img = styled.img`
   width: 1.875rem;
   height: 1.875rem;
   order: 2;
+  animation: ${bounce} 2s ease-in-out infinite;
 `;
 
 const Figcaption = styled.figcaption`
@@ -60,6 +100,17 @@ const ButtonWapper = styled.div`
   bottom: 1rem;
   display: flex;
   flex-direction: column;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 0.8s ease-out 0.8s forwards;
+
+  @keyframes fadeUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   @media screen and (min-width: 1024px) {
     bottom: -50px;
   }

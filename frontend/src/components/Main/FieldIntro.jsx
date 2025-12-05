@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import styled, {keyframes} from 'styled-components';
 import theme from '../../theme';
 
@@ -104,10 +104,24 @@ const Card = styled.div`
   margin: 8rem 0;
   box-shadow: 0px 0px 15px 5px #2b3382;
   animation: ${shadowAnimation} 3s infinite;
+  opacity: 0;
+  transform: translateY(50px) scale(0.95);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 
   ${theme.media.mobile} {
     padding: 1.5rem 1rem;
     margin: 5rem 0;
+    transform: translateY(30px) scale(0.95);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+
+    &.animate {
+      transform: translateY(0) scale(1);
+    }
   }
 
   ${theme.media.tablet} {
@@ -121,8 +135,35 @@ const Card = styled.div`
 `;
 
 function FieldIntro({title, backgroundImage, content}) {
+  const cardRef = useRef(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !hasAnimated) {
+            entry.target.classList.add('animate');
+            setHasAnimated(true);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => {
+      if (cardRef.current) {
+        observer.unobserve(cardRef.current);
+      }
+    };
+  }, [hasAnimated]);
+
   return (
-    <Card>
+    <Card ref={cardRef}>
       <Figure>
         <H3 $margin='0 0 2rem 0'>{title}</H3>
         <Image src={backgroundImage} alt='산업공학도' radius='1.875rem' />

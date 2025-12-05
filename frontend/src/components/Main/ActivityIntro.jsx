@@ -36,6 +36,13 @@ const Card = styled.article`
   width: 100%;
   max-width: 100%;
   ${props => props.$border && 'border: 2px solid white;'}
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  }
 
   ${theme.media.mobile} {
     padding: 1.5rem 0.75rem;

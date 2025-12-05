@@ -1,3 +1,4 @@
+import React, {useRef, useEffect, useState} from 'react';
 import styled from 'styled-components';
 
 const TimelineBlock = styled.div`
@@ -17,6 +18,14 @@ const TimelineBlock = styled.div`
   float: ${props => props.$float || ''};
   direction: ${props => props.direction || ''};
   margin-bottom: 2.5rem;
+  opacity: 0;
+  transform: translateX(${props => props.$float === 'left' ? '-50px' : '50px'});
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+
+  &.animate {
+    opacity: 1;
+    transform: translateX(0);
+  }
 `;
 
 const H3 = styled.h3`
@@ -48,6 +57,12 @@ const Marker = styled.div`
   background: #4fc1e9;
   margin-top: 10px;
   z-index: 50;
+  transform: scale(0);
+  transition: transform 0.5s ease-out 0.3s;
+
+  &.animate {
+    transform: scale(1);
+  }
 `;
 
 const TimelineContent = styled.div`
@@ -57,9 +72,40 @@ const TimelineContent = styled.div`
 `;
 
 function TimelineDetail({float, direction, firstTitle, secondTitle, year, description}) {
+  const blockRef = useRef(null);
+  const markerRef = useRef(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !hasAnimated) {
+            entry.target.classList.add('animate');
+            if (markerRef.current) {
+              markerRef.current.classList.add('animate');
+            }
+            setHasAnimated(true);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    if (blockRef.current) {
+      observer.observe(blockRef.current);
+    }
+
+    return () => {
+      if (blockRef.current) {
+        observer.unobserve(blockRef.current);
+      }
+    };
+  }, [hasAnimated]);
+
   return (
-    <TimelineBlock $float={float} direction={direction}>
-      <Marker />
+    <TimelineBlock ref={blockRef} $float={float} direction={direction}>
+      <Marker ref={markerRef} />
       <TimelineContent>
         <H3>{firstTitle}</H3>
         <H3>{secondTitle}</H3>

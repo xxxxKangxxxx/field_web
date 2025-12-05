@@ -28,6 +28,24 @@ const NanumH3 = styled(H3)`
   font-size: 1.625rem;
   margin: 10rem 0 5rem 0;
 
+  & > span {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+
+    &:nth-child(1) {
+      transition-delay: 0.2s;
+    }
+    &:nth-child(2) {
+      transition-delay: 0.4s;
+    }
+
+    &.animate {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   ${theme.media.tablet} {
     margin: 8rem 0 4rem 0;
   }
@@ -36,6 +54,14 @@ const NanumH3 = styled(H3)`
     font-size: 1.5rem;
     margin: 6rem 0 3rem 0;
     gap: 1.5rem;
+
+    & > span {
+      transform: translateY(20px);
+      
+      &.animate {
+        transform: translateY(0);
+      }
+    }
   }
 
   ${theme.media.desktop} {
@@ -77,9 +103,22 @@ const H2 = styled.h2`
 const GoblinH2 = styled(H2)`
   font-family: 'Goblin One';
   font-size: 1.875rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   ${theme.media.mobile} {
     font-size: 1.625rem;
+    transform: translateY(20px);
+    
+    &.animate {
+      transform: translateY(0);
+    }
   }
 
   ${theme.media.desktop} {
@@ -89,30 +128,50 @@ const GoblinH2 = styled(H2)`
 `;
 
 function IntroSection() {
+  const sectionRef = useRef(null);
   const imgRef = useRef(null);
-  useEffect(() => {
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.style.opacity = 1;
-        }
-      });
-    });
+  const h2Ref = useRef(null);
+  const h3Ref = useRef(null);
 
-    if (imgRef.current) {
-      observer.observe(imgRef.current);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // H2 애니메이션
+            if (h2Ref.current) {
+              h2Ref.current.classList.add('animate');
+            }
+            // H3의 span들 애니메이션
+            if (h3Ref.current) {
+              const spans = h3Ref.current.querySelectorAll('span');
+              spans.forEach(span => span.classList.add('animate'));
+            }
+            // 이미지 애니메이션
+            if (imgRef.current) {
+              imgRef.current.style.opacity = 1;
+            }
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
     }
 
     return () => {
-      if (imgRef.current) {
-        observer.unobserve(imgRef.current);
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
       }
     };
   }, []);
+
   return (
-    <MainSection>
-      <GoblinH2 $margin='5rem 0 2rem 0'>OUR GOAL</GoblinH2>
-      <NanumH3>
+    <MainSection ref={sectionRef}>
+      <GoblinH2 ref={h2Ref} $margin='5rem 0 2rem 0'>OUR GOAL</GoblinH2>
+      <NanumH3 ref={h3Ref}>
         <span>꿈과 비전, 생각을 공유하는</span>
         <span>교류의 장을 만든다</span>
       </NanumH3>

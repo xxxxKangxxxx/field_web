@@ -23,6 +23,14 @@ const H2 = styled.h2`
   font-family: Nanum Myeongjo;
   font-weight: 900;
   margin: 6rem 7.5% 1rem 7.5%;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const Figure = styled.figure`
@@ -30,6 +38,14 @@ const Figure = styled.figure`
   flex-direction: column;
   justify-item: center;
   align-items: center;
+  opacity: 0;
+  transform: translateY(50px) scale(0.95);
+  transition: opacity 0.8s ease-out 0.4s, transform 0.8s ease-out 0.4s;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 `;
 
 const Img = styled.img`
@@ -90,6 +106,10 @@ const CAMP_DATA = {
 
 function CampTopicSection() {
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const sectionRef = React.useRef(null);
+  const h2Ref = React.useRef(null);
+  const figureRef = React.useRef(null);
   const campYear = useSelector(state => state.campTitle.value);
   const dispatch = useDispatch();
 
@@ -100,6 +120,31 @@ function CampTopicSection() {
       dispatch(setCampTitle(years[0]));
     }
   }, [dispatch, campYear]);
+
+  React.useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !hasAnimated) {
+            if (h2Ref.current) h2Ref.current.classList.add('animate');
+            if (figureRef.current) figureRef.current.classList.add('animate');
+            setHasAnimated(true);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, [hasAnimated]);
 
   const toggleImageDisplay = index => {
     setExpandedIndex(prevIndex => (prevIndex === index ? null : index));
@@ -113,12 +158,12 @@ function CampTopicSection() {
   }
 
   return (
-    <Section>
-      <H2>역대 FIELD CAMP</H2>
+    <Section ref={sectionRef}>
+      <H2 ref={h2Ref}>역대 FIELD CAMP</H2>
       <Dropdown title='FIELD CAMP' titleArr={years} />
       <FigureWrapper>
         <div>
-          <Figure>
+          <Figure ref={figureRef}>
             <Img 
               src={currentCamp.posterImage}
               alt={`${currentCamp.year} FIELD CAMP 포스터`} 

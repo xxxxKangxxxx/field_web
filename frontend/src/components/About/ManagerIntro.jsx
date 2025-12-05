@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import styled from 'styled-components';
 
 // 프로필 이미지 import
@@ -48,9 +48,23 @@ const Ul = styled.ul`
 const Li = styled.li`
   width: 40%;
   transition: all 0.3s ease;
-  opacity: ${props => props.$opacity || 1};
-  transform: ${props => props.$scale ? 'scale(1.05)' : 'scale(1)'};
+  opacity: ${props => props.$opacity || 0};
+  transform: ${props => {
+    if (props.$scale) return 'translateY(0) scale(1.05)';
+    return 'translateY(30px) scale(1)';
+  }};
   box-shadow: ${props => props.$highlight ? '0 0 20px rgba(255, 215, 0, 0.3)' : 'none'};
+  cursor: pointer;
+
+  &.animate {
+    opacity: ${props => props.$opacity || 1};
+    transform: translateY(0) scale(1);
+  }
+  
+  &:hover {
+    transform: scale(1.08) !important;
+    opacity: 1 !important;
+  }
   
   @media screen and (min-width: 1280px) {
     width: 20%;
@@ -78,6 +92,15 @@ const Figure = styled.figure`
 `;
 
 const ProfileLi = styled.li`
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   @media screen and (min-width: 1280px) {
     display: flex;
     flex-direction: row;
@@ -134,7 +157,69 @@ const P = styled.p`
   }
 `;
 
-function ManagerIntro({ selectedDepartment }) {
+function ManagerIntro({ selectedDepartment, setSelectedDepartment }) {
+  const leaderRef = useRef(null);
+  const viceLeaderRef = useRef(null);
+  const departmentsRef = useRef(null);
+  const [hasAnimated, setHasAnimated] = useState({
+    leader: false,
+    viceLeader: false,
+    departments: false
+  });
+
+  useEffect(() => {
+    const observerLeader = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !hasAnimated.leader) {
+            entry.target.classList.add('animate');
+            setHasAnimated(prev => ({ ...prev, leader: true }));
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    const observerViceLeader = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !hasAnimated.viceLeader) {
+            entry.target.classList.add('animate');
+            setHasAnimated(prev => ({ ...prev, viceLeader: true }));
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    const observerDepartments = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !hasAnimated.departments) {
+            const items = entry.target.querySelectorAll('li');
+            items.forEach((item, index) => {
+              setTimeout(() => {
+                item.classList.add('animate');
+              }, index * 150);
+            });
+            setHasAnimated(prev => ({ ...prev, departments: true }));
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (leaderRef.current) observerLeader.observe(leaderRef.current);
+    if (viceLeaderRef.current) observerViceLeader.observe(viceLeaderRef.current);
+    if (departmentsRef.current) observerDepartments.observe(departmentsRef.current);
+
+    return () => {
+      if (leaderRef.current) observerLeader.unobserve(leaderRef.current);
+      if (viceLeaderRef.current) observerViceLeader.unobserve(viceLeaderRef.current);
+      if (departmentsRef.current) observerDepartments.unobserve(departmentsRef.current);
+    };
+  }, [hasAnimated]);
+
   const profiles = {
     leader: {
       id: 1,
@@ -204,6 +289,11 @@ function ManagerIntro({ selectedDepartment }) {
     return isHighlighted(department) ? 1 : 0.5;
   };
 
+  // 부장 사진 클릭 핸들러
+  const handleDepartmentClick = (department) => {
+    setSelectedDepartment(department);
+  };
+
   return (
     <MainSection>
       <NanumH2 $margin='5rem 0'>
@@ -211,7 +301,7 @@ function ManagerIntro({ selectedDepartment }) {
         <span>여러분의 꿈을 실현하세요.</span>
       </NanumH2>
       <Ul $margin='2rem 0' $gap='5rem'>
-        <ProfileLi>
+        <ProfileLi ref={leaderRef}>
             <Figure>
               <Image
               src={profiles.leader.photo}
@@ -254,7 +344,7 @@ function ManagerIntro({ selectedDepartment }) {
           </ProfileLi>
       </Ul>
       <Ul $margin='4rem 0 2rem 0' $gap='5rem'>
-        <ProfileLi>
+        <ProfileLi ref={viceLeaderRef}>
             <Figure>
               <Image
               src={profiles.viceLeader.photo}
@@ -296,13 +386,14 @@ function ManagerIntro({ selectedDepartment }) {
             </Container>
           </ProfileLi>
       </Ul>
-      <Ul $margin='2rem 0 1rem 0' $desktopMargin='4rem 0 2rem 0'>
+      <Ul ref={departmentsRef} $margin='2rem 0 1rem 0' $desktopMargin='4rem 0 2rem 0'>
         {profiles.departments.map(item => (
           <Li 
             key={item.id}
             $opacity={getOpacity(item.department)}
             $scale={isHighlighted(item.department)}
             $highlight={isHighlighted(item.department)}
+            onClick={() => handleDepartmentClick(item.department)}
           >
             <Figure>
               <Image

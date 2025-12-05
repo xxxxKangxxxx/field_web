@@ -7,7 +7,7 @@ const Section = styled.section`
   display: flex;
   flex-direction: column;
 
-  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+  background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
     url(${props => props.src});
   background-position: center;
   background-size: ${props => (props.size ? props.size : 'cover')};
@@ -52,6 +52,15 @@ const P = styled.p`
   text-align: center;
   letter-spacing: -0.1em;
   font-weight: bold;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out 0.3s, transform 0.8s ease-out 0.3s;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   @media screen and (min-width: 1024px) {
     font-size: 25px;
   }
@@ -63,13 +72,18 @@ const Span = styled.span`
 
 function CampImageSection({img, title, firstLine = '', secondLine = '', thirdLine = ''}) {
   const h2Ref = useRef(null);
+  const pRef = useRef(null);
   const [animate, setAnimate] = useState(false);
   const [fontSize, setFontSize] = useState('');
+  
   useEffect(() => {
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           setAnimate(true);
+          if (pRef.current) {
+            pRef.current.classList.add('animate');
+          }
         }
       });
     });
@@ -102,7 +116,7 @@ function CampImageSection({img, title, firstLine = '', secondLine = '', thirdLin
   return (
     <Section src={img}>
       <H2 ref={h2Ref}>{animate && <TextGenerator text={title} size={fontSize} />}</H2>
-      <P>
+      <P ref={pRef}>
         <Span>{firstLine}</Span>
         <Span>{secondLine}</Span>
         <Span>{thirdLine}</Span>

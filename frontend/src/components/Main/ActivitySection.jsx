@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef, useEffect, useState} from 'react';
 import styled from 'styled-components';
 import {Pagination, Autoplay} from 'swiper/modules';
 import {Swiper, SwiperSlide} from 'swiper/react';
@@ -28,6 +28,14 @@ const SwiperContainer = styled.div`
 
 const NanumH2 = styled(H2)`
   font-family: 'Nanum Myeongjo', serif;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   ${theme.media.mobile} {
     font-size: 1.625rem;
@@ -62,10 +70,46 @@ const StyledSwiper = styled(Swiper)`
 `;
 
 function ActivitySection() {
+  const sectionRef = useRef(null);
+  const h2Ref1 = useRef(null);
+  const h2Ref2 = useRef(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !hasAnimated) {
+            if (h2Ref1.current) {
+              h2Ref1.current.classList.add('animate');
+            }
+            setTimeout(() => {
+              if (h2Ref2.current) {
+                h2Ref2.current.classList.add('animate');
+              }
+            }, 100);
+            setHasAnimated(true);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, [hasAnimated]);
+
   return (
-    <section>
-      <NanumH2 $margin='2rem 7.5% 1rem 7.5%'>인적, 학술적 교류를</NanumH2>
-      <NanumH2 $margin='0 7.5% 2rem 7.5%'>실현하는 다양한 활동들</NanumH2>
+    <section ref={sectionRef}>
+      <NanumH2 ref={h2Ref1} $margin='2rem 7.5% 1rem 7.5%'>인적, 학술적 교류를</NanumH2>
+      <NanumH2 ref={h2Ref2} $margin='0 7.5% 2rem 7.5%'>실현하는 다양한 활동들</NanumH2>
       <SwiperContainer $margin='2rem 0'>
         <StyledSwiper
           modules={[Pagination, Autoplay]}

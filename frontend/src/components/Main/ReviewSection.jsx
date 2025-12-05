@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css/pagination';
 import {Pagination} from 'swiper/modules';
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useRef} from 'react';
 import theme from '../../theme';
 import {ReviewApi} from '../../lib/Apiservice';
 
@@ -15,6 +15,14 @@ const H2 = styled.h2`
 const GoblinH2 = styled(H2)`
   font-family: 'Goblin One';
   font-size: ${props => props.$size || '1.875rem'};
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   ${theme.media.tablet} {
     font-size: 1.5rem;
@@ -57,6 +65,13 @@ const Card = styled.article`
   position: relative;
   width: 100%;
   max-width: 100%;
+  transition: transform 0.3s ease, filter 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.03);
+    filter: brightness(1.1);
+  }
 
   ${theme.media.tablet} {
     width: 550px;
@@ -120,6 +135,9 @@ const StyledSwiper = styled(Swiper)`
 
 function ReviewSection() {
   const [reviewData, setReviewData] = useState([]);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const h2Ref = useRef(null);
+  const sectionRef = useRef(null);
   const EXPIRY_DURATION = 365 * 24 * 60 * 60 * 1000;
 
   const getReview = async () => {
@@ -143,9 +161,35 @@ function ReviewSection() {
     getReview();
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !hasAnimated) {
+            if (h2Ref.current) {
+              h2Ref.current.classList.add('animate');
+            }
+            setHasAnimated(true);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => {
+      if (sectionRef.current) {
+        observer.unobserve(sectionRef.current);
+      }
+    };
+  }, [hasAnimated]);
+
   return (
-    <>
-      <GoblinH2 $margin='8rem 0 4rem 0' $size='1.25rem'>
+    <div ref={sectionRef}>
+      <GoblinH2 ref={h2Ref} $margin='8rem 0 4rem 0' $size='1.25rem'>
         How was your FIELD?
       </GoblinH2>
       <SwiperContainer $margin='2rem 0 5rem 0'>
@@ -189,7 +233,7 @@ function ReviewSection() {
           ))}
         </StyledSwiper>
       </SwiperContainer>
-    </>
+    </div>
   );
 }
 

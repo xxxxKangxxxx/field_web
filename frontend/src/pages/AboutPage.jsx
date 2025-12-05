@@ -24,7 +24,10 @@ function AboutPage() {
       <AccessibilityHidden>어바웃 필드</AccessibilityHidden>
       <TitleSection />
       <TimelineSection />
-      <ManagerIntro selectedDepartment={selectedDepartment} />
+      <ManagerIntro 
+        selectedDepartment={selectedDepartment}
+        setSelectedDepartment={setSelectedDepartment}
+      />
       <DepartmentSection 
         selectedDepartment={selectedDepartment}
         setSelectedDepartment={setSelectedDepartment}
