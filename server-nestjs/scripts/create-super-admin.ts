@@ -33,6 +33,8 @@ async function createSuperAdmin() {
     const email = await question('이메일을 입력하세요: ');
     const name = await question('이름을 입력하세요: ');
     const password = await question('비밀번호를 입력하세요 (최소 4자): ');
+    const generationStr = await question('기수를 입력하세요 (1-18): ');
+    const generation = parseInt(generationStr, 10);
     const department = await question('소속을 입력하세요 (대외협력부/총기획단/기획부/컴페티션부/홍보부): ');
     const position = await question('직책을 입력하세요 (대외협력부장/단장/부단장/기획부장/컴페티션부장/홍보부장/부원): ');
 
@@ -57,6 +59,8 @@ async function createSuperAdmin() {
       email,
       password,
       name,
+      memberType: 'FIELD',
+      generation,
       department,
       position,
     });
@@ -67,6 +71,8 @@ async function createSuperAdmin() {
     console.log('\n✅ 최상위 관리자 계정이 생성되었습니다!');
     console.log(`   이메일: ${email}`);
     console.log(`   이름: ${name}`);
+    console.log(`   회원 유형: FIELD`);
+    console.log(`   기수: ${generation}`);
     console.log(`   소속: ${department}`);
     console.log(`   직책: ${position}`);
     console.log(`   권한: 최상위 관리자\n`);
