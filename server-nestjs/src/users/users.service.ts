@@ -35,8 +35,10 @@ export class UsersService {
     email: string;
     password: string;
     name: string;
-    department: string;
-    position: string;
+    memberType: string;
+    generation?: number;
+    department?: string;
+    position?: string;
   }): Promise<UserDocument> {
     // 이메일 중복 체크
     const existingUser = await this.findByEmail(userData.email);
@@ -45,10 +47,11 @@ export class UsersService {
     }
 
     // isAdmin 자동 설정 (부장, 단장, 부단장)
-    const isAdmin =
-      userData.position.includes('부장') ||
-      userData.position === '단장' ||
-      userData.position === '부단장';
+    const isAdmin = userData.position
+      ? userData.position.includes('부장') ||
+        userData.position === '단장' ||
+        userData.position === '부단장'
+      : false;
 
     const newUser = new this.userModel({
       ...userData,
