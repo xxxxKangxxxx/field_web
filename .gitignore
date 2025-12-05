@@ -23,6 +23,10 @@ field-keypair.pem
 *password*
 *.credentials
 
+# Exceptions - Allow DTO files
+!*.dto.ts
+!**/dto/*.ts
+
 # AWS Config (로컬 설정)
 .aws/
 aws-credentials.json
