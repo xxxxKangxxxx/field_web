@@ -297,7 +297,7 @@ function ManagerIntro({ selectedDepartment, setSelectedDepartment }) {
   return (
     <MainSection>
       <NanumH2 $margin='5rem 0'>
-        <span>17기 단장단과 함께</span>
+        <span>18기 단장단과 함께</span>
         <span>여러분의 꿈을 실현하세요.</span>
       </NanumH2>
       <Ul $margin='2rem 0' $gap='5rem'>
