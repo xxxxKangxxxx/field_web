@@ -185,22 +185,63 @@ export default function Content() {
   } else if (isLoading) {
     recruitmentContent = <LoadingSpin />;
   } else if (dateData && dateData.schedules && dateData.schedules.length > 0) {
-    // 모집 기간 포맷팅 (YYYY-MM-DD -> YYYY.MM.DD)
-    if (dateData.recruitStartDate && dateData.recruitEndDate) {
-      const formatDate = (date) => date.replace(/-/g, '.');
+    const formatDate = (date) => date.replace(/-/g, '.');
+
+    // 상단 큰 모집 일정: type === 'application'인 스케줄 우선 사용
+    const applicationSchedule = dateData.schedules.find(
+      (schedule) => schedule.type === 'application'
+    );
+
+    if (applicationSchedule && applicationSchedule.startDate) {
+      const periodText = applicationSchedule.endDate &&
+        applicationSchedule.endDate !== applicationSchedule.startDate
+        ? `${formatDate(applicationSchedule.startDate)} ~ ${formatDate(applicationSchedule.endDate)}`
+        : formatDate(applicationSchedule.startDate);
+
+      recruitmentPeriod = `${applicationSchedule.title}: ${periodText}`;
+    } else if (dateData.recruitStartDate && dateData.recruitEndDate) {
+      // fallback: 기존 top-level 모집 기간 필드 사용
       recruitmentPeriod = `${formatDate(dateData.recruitStartDate)} ~ ${formatDate(dateData.recruitEndDate)}`;
     }
 
+    // 하단 모집 일정 리스트
     recruitmentContent = (
       <>
-        {dateData.schedules.map((schedule, index) => (
-          <DateP key={index}>
-            <Emoji>{schedule.title.includes('서류') ? '📄' : 
-                   schedule.title.includes('면접') ? '💬' : 
-                   schedule.title.includes('발표') ? '✅' : '📅'}</Emoji>
-            {`${schedule.title}: ${schedule.date}`}
-          </DateP>
-        ))}
+        {dateData.schedules.map((schedule, index) => {
+          const emojiByType =
+            schedule.type === 'application' ? '📄' :
+            schedule.type === 'doc_result' ? '✅' :
+            schedule.type === 'interview' ? '💬' :
+            schedule.type === 'final_result' ? '🏁' :
+            '📅';
+
+          const legacyEmoji =
+            schedule.title?.includes('서류') ? '📄' :
+            schedule.title?.includes('면접') ? '💬' :
+            schedule.title?.includes('발표') ? '✅' :
+            '📅';
+
+          const emoji = schedule.type ? emojiByType : legacyEmoji;
+
+          let dateText = '';
+          if (schedule.startDate) {
+            if (schedule.endDate && schedule.endDate !== schedule.startDate) {
+              dateText = `${formatDate(schedule.startDate)} ~ ${formatDate(schedule.endDate)}`;
+            } else {
+              dateText = formatDate(schedule.startDate);
+            }
+          } else if (schedule.date) {
+            // 레거시 데이터용
+            dateText = schedule.date;
+          }
+
+          return (
+            <DateP key={index}>
+              <Emoji>{emoji}</Emoji>
+              {`${schedule.title}: ${dateText}`}
+            </DateP>
+          );
+        })}
       </>
     );
   } else {

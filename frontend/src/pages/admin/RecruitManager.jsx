@@ -111,7 +111,7 @@ export default function RecruitManager() {
     recruitStartDate: '',
     recruitEndDate: '',
     isActive: false,
-    schedules: [{ title: '', date: '' }]
+    schedules: [{ title: '', type: 'application', startDate: '', endDate: '' }]
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -151,7 +151,7 @@ export default function RecruitManager() {
   const addScheduleField = () => {
     setFormData(prev => ({
       ...prev,
-      schedules: [...prev.schedules, { title: '', date: '' }]
+      schedules: [...prev.schedules, { title: '', type: 'application', startDate: '', endDate: '' }]
     }));
   };
 
@@ -187,7 +187,7 @@ export default function RecruitManager() {
         recruitStartDate: '',
         recruitEndDate: '',
         isActive: false,
-        schedules: [{ title: '', date: '' }]
+        schedules: [{ title: '', type: 'application', startDate: '', endDate: '' }]
       });
     } catch (error) {
       setError('일정 등록에 실패했습니다.');
@@ -286,11 +286,30 @@ export default function RecruitManager() {
                 onChange={(e) => handleScheduleChange(index, 'title', e.target.value)}
                 required
               />
-              <Input
-                placeholder="날짜 (예: 2024.01.01)"
-                value={schedule.date}
-                onChange={(e) => handleScheduleChange(index, 'date', e.target.value)}
+              <Select
+                name="type"
+                value={schedule.type}
+                onChange={(e) => handleScheduleChange(index, 'type', e.target.value)}
                 required
+              >
+                <option value="application">서류 모집 일정</option>
+                <option value="doc_result">서류 합격자 발표일</option>
+                <option value="interview">면접 일정</option>
+                <option value="final_result">최종 합격자 발표일</option>
+                <option value="etc">기타 일정</option>
+              </Select>
+              <Input
+                type="date"
+                placeholder="시작일"
+                value={schedule.startDate}
+                onChange={(e) => handleScheduleChange(index, 'startDate', e.target.value)}
+                required
+              />
+              <Input
+                type="date"
+                placeholder="종료일 (선택)"
+                value={schedule.endDate}
+                onChange={(e) => handleScheduleChange(index, 'endDate', e.target.value)}
               />
               <Button type="button" onClick={() => removeScheduleField(index)}>
                 삭제

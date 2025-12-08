@@ -9,8 +9,24 @@ class Schedule {
   @Prop({ required: true })
   title: string;
 
+  // 일정 유형: 서류 모집, 서류 합격 발표, 면접, 최종 발표, 기타
+  @Prop({
+    required: true,
+    enum: ['application', 'doc_result', 'interview', 'final_result', 'etc'],
+  })
+  type: string;
+
+  // 시작일 (YYYY-MM-DD)
   @Prop({ required: true })
-  date: string;
+  startDate: string;
+
+  // 종료일 (YYYY-MM-DD, 선택값)
+  @Prop()
+  endDate?: string;
+
+  // 레거시 데이터 호환용 단일 날짜 필드
+  @Prop()
+  date?: string;
 }
 
 @Schema({ timestamps: true })
