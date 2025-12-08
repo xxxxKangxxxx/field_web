@@ -50,18 +50,51 @@ const P = styled.p`
 
 const Marker = styled.div`
   position: absolute;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid #f5f7fa;
-  background: #4fc1e9;
+  /* 중앙 세로 라인과 정렬되도록, float 방향에 따라 좌우 오프셋 조정 */
+  left: ${props => (props.$float === 'right' ? '5px' : 'auto')};
+  right: ${props => (props.$float === 'left' ? '5px' : 'auto')};
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
   margin-top: 10px;
   z-index: 50;
   transform: scale(0);
   transition: transform 0.5s ease-out 0.3s;
 
+  /* 가운데 코어: 밝은 네온 느낌의 그라디언트 */
+  background: radial-gradient(
+    circle at 30% 30%,
+    #ffffff 0%,
+    #7ce8ff 40%,
+    #3cb4ff 100%
+  );
+
+  /* 바깥 링 + 퍼지는 글로우 */
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.25),
+    0 0 14px rgba(124, 232, 255, 0.7);
+
   &.animate {
     transform: scale(1);
+    animation: pulse 1.8s ease-out infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow:
+        0 0 0 2px rgba(255, 255, 255, 0.25),
+        0 0 14px rgba(124, 232, 255, 0.7);
+    }
+    70% {
+      box-shadow:
+        0 0 0 5px rgba(124, 232, 255, 0),
+        0 0 22px rgba(124, 232, 255, 0.8);
+    }
+    100% {
+      box-shadow:
+        0 0 0 2px rgba(255, 255, 255, 0.25),
+        0 0 14px rgba(124, 232, 255, 0.7);
+    }
   }
 `;
 
@@ -105,7 +138,7 @@ function TimelineDetail({float, direction, firstTitle, secondTitle, year, descri
 
   return (
     <TimelineBlock ref={blockRef} $float={float} direction={direction}>
-      <Marker ref={markerRef} />
+      <Marker ref={markerRef} $float={float} />
       <TimelineContent>
         <H3>{firstTitle}</H3>
         <H3>{secondTitle}</H3>

@@ -30,6 +30,37 @@ const GoblinH2 = styled(H2)`
 `;
 
 const MainSection = styled.section`
+  position: relative;
+  background: #050608;
+  padding: 80px 0;
+
+  /* 위·아래로 살짝 퍼지는 빛나는 라인 효과 */
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 1200px;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.95) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.7);
+  }
+
+  &::before {
+    top: 0;
+  }
+
+  &::after {
+    bottom: 0;
+  }
+
   @media screen and (min-width: 1280px) {
     margin: 0 15%;
   }
