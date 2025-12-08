@@ -122,7 +122,7 @@ const APPLYMETHOD = (
       <WhiteMessage src='MessageWhite.png' alt='하얀색 Messege 아이콘' width={20} />
       <address>
         <AddressLink href='mailto:iefieldcamp24@gmail.com' target='_blank'>
-          iefieldcamp24@gmail.com
+          iefieldcamp26@gmail.com
         </AddressLink>
       </address>
       👈
@@ -173,6 +173,8 @@ export default function Content() {
   }, []);
 
   let recruitmentContent;
+  let recruitmentPeriod = null;
+
   if (isError) {
     recruitmentContent = (
       <>
@@ -183,6 +185,12 @@ export default function Content() {
   } else if (isLoading) {
     recruitmentContent = <LoadingSpin />;
   } else if (dateData && dateData.schedules && dateData.schedules.length > 0) {
+    // 모집 기간 포맷팅 (YYYY-MM-DD -> YYYY.MM.DD)
+    if (dateData.recruitStartDate && dateData.recruitEndDate) {
+      const formatDate = (date) => date.replace(/-/g, '.');
+      recruitmentPeriod = `${formatDate(dateData.recruitStartDate)} ~ ${formatDate(dateData.recruitEndDate)}`;
+    }
+
     recruitmentContent = (
       <>
         {dateData.schedules.map((schedule, index) => (
@@ -207,6 +215,12 @@ export default function Content() {
       <InfoGroup subtitle='😀 지원자격' content='산업공학을 주/복수/부전공하는 대학생' />
       <InfoGroupWithBox subtitle='💎 지원 방법' content={APPLYMETHOD} />
       <InfoGroup subtitle='📚 활동 기간' content='매년 3월 ~ 12월 (10개월)' />
+      {recruitmentPeriod && (
+        <InfoGroup
+          subtitle='📆 모집 기간'
+          content={recruitmentPeriod}
+        />
+      )}
       <InfoGroupWithBox subtitle='📆 모집 일정' content={recruitmentContent} />
     </>
   );

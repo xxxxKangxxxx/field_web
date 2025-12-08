@@ -107,7 +107,9 @@ export default function RecruitManager() {
   const [schedules, setSchedules] = useState([]);
   const [formData, setFormData] = useState({
     year: new Date().getFullYear(),
-    season: '상반기',
+    season: '상반기', // 시즌은 UI에서는 숨기고, 백엔드에는 고정값으로 전송
+    recruitStartDate: '',
+    recruitEndDate: '',
     isActive: false,
     schedules: [{ title: '', date: '' }]
   });
@@ -165,12 +167,25 @@ export default function RecruitManager() {
     setLoading(true);
     setError(null);
 
+    // 모집 기간 유효성 체크: 둘 다 있을 때만 비교
+    if (
+      formData.recruitStartDate &&
+      formData.recruitEndDate &&
+      formData.recruitStartDate > formData.recruitEndDate
+    ) {
+      setError('모집 시작일은 종료일보다 늦을 수 없습니다.');
+      setLoading(false);
+      return;
+    }
+
     try {
       await api.post('/api/recruit', formData);
       await fetchSchedules();
       setFormData({
         year: new Date().getFullYear(),
         season: '상반기',
+        recruitStartDate: '',
+        recruitEndDate: '',
         isActive: false,
         schedules: [{ title: '', date: '' }]
       });
@@ -203,6 +218,14 @@ export default function RecruitManager() {
     }
   };
 
+  const formatRecruitPeriod = (schedule) => {
+    const { recruitStartDate, recruitEndDate } = schedule;
+    if (!recruitStartDate || !recruitEndDate) return '-';
+
+    const format = (date) => date.replace(/-/g, '.');
+    return `${format(recruitStartDate)} ~ ${format(recruitEndDate)}`;
+  };
+
   return (
     <Container>
       <Title>모집 일정 관리</Title>
@@ -222,16 +245,24 @@ export default function RecruitManager() {
         </FormGroup>
 
         <FormGroup>
-          <Label>시즌</Label>
-          <Select
-            name="season"
-            value={formData.season}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="상반기">상반기</option>
-            <option value="하반기">하반기</option>
-          </Select>
+          <Label>모집 기간</Label>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <Input
+              type="date"
+              name="recruitStartDate"
+              value={formData.recruitStartDate}
+              onChange={handleInputChange}
+              required
+            />
+            <span>~</span>
+            <Input
+              type="date"
+              name="recruitEndDate"
+              value={formData.recruitEndDate}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
         </FormGroup>
 
         <FormGroup>
@@ -283,7 +314,7 @@ export default function RecruitManager() {
         <thead>
           <tr>
             <th>연도</th>
-            <th>시즌</th>
+            <th>모집 기간</th>
             <th>상태</th>
             <th>일정 수</th>
             <th>작업</th>
@@ -293,7 +324,7 @@ export default function RecruitManager() {
           {schedules.map((schedule) => (
             <tr key={schedule._id}>
               <td>{schedule.year}</td>
-              <td>{schedule.season}</td>
+              <td>{formatRecruitPeriod(schedule)}</td>
               <td>
                 <Badge active={schedule.isActive}>
                   {schedule.isActive ? '활성' : '비활성'}

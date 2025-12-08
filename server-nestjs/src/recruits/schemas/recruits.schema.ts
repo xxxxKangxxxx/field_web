@@ -27,6 +27,13 @@ export class Recruit {
   })
   season: string;
 
+  // 모집 기간 (시작일, 종료일) - YYYY-MM-DD 형식 문자열로 저장
+  @Prop()
+  recruitStartDate?: string;
+
+  @Prop()
+  recruitEndDate?: string;
+
   @Prop({ type: [Schedule], default: [] })
   schedules: Schedule[];
 

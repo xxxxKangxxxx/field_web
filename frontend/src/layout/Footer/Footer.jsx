@@ -67,7 +67,7 @@ export default function Footer() {
       <FooterContentWrapper>
         <FooterContent>FIELD (필드, 전국 대학생 산업공학도 모임)</FooterContent>
         <FooterContent>Copyrightⓒ2024.FIELD. All rights reserved.</FooterContent>
-        <AddressLink href='mailto:iefieldcamp24@gmail.com' target='_blank'>
+        <AddressLink href='mailto:iefieldcamp26@gmail.com' target='_blank'>
           iefieldcamp24@gmail.com
         </AddressLink>
       </FooterContentWrapper>
