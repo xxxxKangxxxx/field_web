@@ -85,10 +85,6 @@ const LoadingSpin = styled.div`
   animation: ${spin} 0.5s linear infinite;
 `;
 
-const Emoji = styled.span`
-  margin: 0 0.35rem 0 0;
-`;
-
 function InfoGroup({subtitle, content}) {
   return (
     <ContentWrapper>
@@ -118,14 +114,12 @@ const APPLYMETHOD = (
       <OneLine>다운로드 후 서류 작성하여 아래 이메일로 제출</OneLine>
     </P>
     <FlexRow>
-      👉
       <WhiteMessage src='MessageWhite.png' alt='하얀색 Messege 아이콘' width={20} />
       <address>
         <AddressLink href='mailto:iefieldcamp24@gmail.com' target='_blank'>
           iefieldcamp26@gmail.com
         </AddressLink>
       </address>
-      👈
     </FlexRow>
   </>
 );
@@ -190,21 +184,6 @@ export default function Content() {
     recruitmentContent = (
       <>
         {dateData.schedules.map((schedule, index) => {
-          const emojiByType =
-            schedule.type === 'application' ? '📄' :
-            schedule.type === 'doc_result' ? '✅' :
-            schedule.type === 'interview' ? '💬' :
-            schedule.type === 'final_result' ? '🏁' :
-            '📅';
-
-          const legacyEmoji =
-            schedule.title?.includes('서류') ? '📄' :
-            schedule.title?.includes('면접') ? '💬' :
-            schedule.title?.includes('발표') ? '✅' :
-            '📅';
-
-          const emoji = schedule.type ? emojiByType : legacyEmoji;
-
           let dateText = '';
           if (schedule.startDate) {
             if (schedule.endDate && schedule.endDate !== schedule.startDate) {
@@ -219,7 +198,6 @@ export default function Content() {
 
           return (
             <DateP key={index}>
-              <Emoji>{emoji}</Emoji>
               {`${schedule.title}: ${dateText}`}
             </DateP>
           );
@@ -235,7 +213,7 @@ export default function Content() {
 
   return (
     <>
-      <InfoGroup subtitle='😀 지원자격' content='산업공학을 주/복수/부전공하는 대학생' />
+      <InfoGroup subtitle='지원자격' content='산업공학을 주/복수/부전공하는 대학생' />
       <InfoGroupWithBox subtitle='💎 지원 방법' content={APPLYMETHOD} />
       <InfoGroup subtitle='📚 활동 기간' content='매년 3월 ~ 12월 (10개월)' />
       <InfoGroupWithBox subtitle='📆 모집 일정' content={recruitmentContent} />

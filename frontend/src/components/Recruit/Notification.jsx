@@ -12,9 +12,10 @@ const P = styled.p`
 `;
 
 const Banner = styled.div`
+  width: 100%;
   max-width: 640px;
-  margin: 8rem auto 0;
-  padding: 1.75rem 2.5rem;
+  margin: 6rem auto 0;
+  padding: 1.5rem 1.25rem;
   border-radius: 1.25rem;
   border: 1px solid
     ${({ active }) =>
@@ -27,6 +28,16 @@ const Banner = styled.div`
     active ? '0 0 26px rgba(255, 213, 79, 0.55)' : 'none'};
   backdrop-filter: blur(14px);
   transition: all 0.3s ease;
+
+  @media (min-width: 768px) {
+    margin-top: 7rem;
+    padding: 1.75rem 2.25rem;
+  }
+
+  @media (min-width: 1280px) {
+    margin-top: 8rem;
+    padding: 1.75rem 2.5rem;
+  }
 `;
 
 const Badge = styled.span`

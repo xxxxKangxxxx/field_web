@@ -179,8 +179,8 @@ export default function Department() {
           </DepartmentButton>
         ))}
       </ButtonWrapper>
-      <DepartmentBox part={selectedDepartment} p='는 어떤 인재를 원하나요! 🔍' target='explain' />
-      <DepartmentBox part={selectedDepartment} p='는 어떤 활동을 하나요! 💪' target='activity' />
+      <DepartmentBox part={selectedDepartment} p='는 어떤 인재를 원하나요' target='explain' />
+      <DepartmentBox part={selectedDepartment} p='는 어떤 활동을 하나요' target='activity' />
     </ContentWrapper>
   );
 }
