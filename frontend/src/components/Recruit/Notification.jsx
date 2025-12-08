@@ -23,6 +23,7 @@ const P = styled.p`
 
 const Banner = styled.div`
   width: 100%;
+  box-sizing: border-box;
   max-width: 640px;
   margin: 6rem auto 0;
   padding: 1.5rem 1.25rem;
