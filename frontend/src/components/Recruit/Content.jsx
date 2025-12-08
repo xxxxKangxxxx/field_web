@@ -274,7 +274,7 @@ export default function Content() {
 
   return (
     <>
-      <ContentWrapper>
+      <ContentWrapper $maxWidth='1100px'>
         <SubTitle>지원 자격</SubTitle>
         <EligibilitySubText>
           아래 3가지 모두 해당된다면, 누구든 지원 가능합니다.

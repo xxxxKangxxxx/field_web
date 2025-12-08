@@ -6,10 +6,10 @@ const ContentWrapper = styled.section`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 500px;
+  max-width: ${props => (props.$maxWidth ? props.$maxWidth : '500px')};
 
   @media (min-width: 768px) {
-    max-width: 600px;
+    max-width: ${props => (props.$maxWidth ? props.$maxWidth : '600px')};
   }
 
   @media (min-width: 1024px) {
