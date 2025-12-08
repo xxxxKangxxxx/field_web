@@ -85,6 +85,67 @@ const LoadingSpin = styled.div`
   animation: ${spin} 0.5s linear infinite;
 `;
 
+const EligibilitySubText = styled.p`
+  margin: 0 0 2rem 0;
+  text-align: center;
+  color: ${theme.colors.white};
+  font-size: 1rem;
+  font-weight: 500;
+  opacity: 0.85;
+  word-break: keep-all;
+
+  @media (min-width: 768px) {
+    font-size: 1.05rem;
+  }
+`;
+
+const EligibilityCards = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+`;
+
+const EligibilityCard = styled.div`
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 1.25rem;
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.45);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.75rem;
+
+  @media (min-width: 1024px) {
+    padding: 2rem 1.75rem;
+  }
+`;
+
+const EligibilityCardTitle = styled.h3`
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: ${theme.colors.white};
+  margin: 0;
+`;
+
+const EligibilityCardDesc = styled.p`
+  margin: 0;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9);
+  word-break: keep-all;
+  line-height: 1.5;
+
+  @media (min-width: 1024px) {
+    font-size: 1rem;
+  }
+`;
+
 function InfoGroup({subtitle, content}) {
   return (
     <ContentWrapper>
@@ -213,10 +274,35 @@ export default function Content() {
 
   return (
     <>
-      <InfoGroup subtitle='지원자격' content='산업공학을 주/복수/부전공하는 대학생' />
-      <InfoGroupWithBox subtitle='💎 지원 방법' content={APPLYMETHOD} />
-      <InfoGroup subtitle='📚 활동 기간' content='매년 3월 ~ 12월 (10개월)' />
-      <InfoGroupWithBox subtitle='📆 모집 일정' content={recruitmentContent} />
+      <ContentWrapper>
+        <SubTitle>지원 자격</SubTitle>
+        <EligibilitySubText>
+          아래 3가지 모두 해당된다면, 누구든 지원 가능합니다.
+        </EligibilitySubText>
+        <EligibilityCards>
+          <EligibilityCard>
+            <EligibilityCardTitle>산업공학 전공자</EligibilityCardTitle>
+            <EligibilityCardDesc>
+              산업공학을 주전공, 복수전공, 부전공으로 이수 중인 대학(원)생
+            </EligibilityCardDesc>
+          </EligibilityCard>
+          <EligibilityCard>
+            <EligibilityCardTitle>수도권 내 활동 가능</EligibilityCardTitle>
+            <EligibilityCardDesc>
+              정기 모임 및 주요 활동이 진행되는 수도권에서의 오프라인 참여가 가능한 분
+            </EligibilityCardDesc>
+          </EligibilityCard>
+          <EligibilityCard>
+            <EligibilityCardTitle>열정적인 팀 플레이어</EligibilityCardTitle>
+            <EligibilityCardDesc>
+              FIELD 활동에 적극적으로 참여하며 함께 성장하고자 하는 열정적인 대학생
+            </EligibilityCardDesc>
+          </EligibilityCard>
+        </EligibilityCards>
+      </ContentWrapper>
+      <InfoGroupWithBox subtitle='지원 방법' content={APPLYMETHOD} />
+      <InfoGroup subtitle='활동 기간' content='매년 3월 ~ 12월 (10개월)' />
+      <InfoGroupWithBox subtitle='모집 일정' content={recruitmentContent} />
     </>
   );
 }
