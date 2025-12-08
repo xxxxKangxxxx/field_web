@@ -9,6 +9,16 @@ const P = styled.p`
   font-weight: ${props => (props.$fontWeight ? props.$fontWeight : 300)};
   text-align: center;
   margin: ${props => (props.$margin ? props.$margin : '0.75rem 0')};
+
+  @media (max-width: 480px) {
+    font-size: ${props =>
+      props.$fontSizeMobile
+        ? props.$fontSizeMobile
+        : props.$fontSize
+        ? `calc(${props.$fontSize} * 0.85)`
+        : '0.95rem'};
+    line-height: 1.4;
+  }
 `;
 
 const Banner = styled.div`
@@ -83,17 +93,21 @@ export default function Notification() {
       {hasActiveRecruit ? (
         <>
           <Badge>모집 중</Badge>
-          <P $fontSize='1.5rem' $fontWeight='600'>
+          <P $fontSize='1.5rem' $fontSizeMobile='1.25rem' $fontWeight='600'>
             지금 필드 신규 멤버를 모집 중입니다.
           </P>
-          <P>아래에서 자세한 모집 일정을 확인하고 지원해주세요.</P>
+          <P $fontSizeMobile='0.95rem'>
+            아래에서 자세한 모집 일정을 확인하고 지원해주세요.
+          </P>
         </>
       ) : (
         <>
-          <P $fontSize='1.5rem' $fontWeight='600'>
+          <P $fontSize='1.5rem' $fontSizeMobile='1.25rem' $fontWeight='600'>
             지금은 모집기간이 아닙니다.
           </P>
-          <P>필드는 매년 1월에 새로운 멤버를 모집합니다.</P>
+          <P $fontSizeMobile='0.95rem'>
+            필드는 매년 1월에 새로운 멤버를 모집합니다.
+          </P>
         </>
       )}
     </Banner>
