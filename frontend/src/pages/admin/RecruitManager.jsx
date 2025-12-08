@@ -113,6 +113,7 @@ export default function RecruitManager() {
     isActive: false,
     schedules: [{ title: '', type: 'application', startDate: '', endDate: '' }]
   });
+  const [editingId, setEditingId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -179,7 +180,11 @@ export default function RecruitManager() {
     }
 
     try {
-      await api.post('/api/recruit', formData);
+      if (editingId) {
+        await api.put(`/api/recruit/${editingId}`, formData);
+      } else {
+        await api.post('/api/recruit', formData);
+      }
       await fetchSchedules();
       setFormData({
         year: new Date().getFullYear(),
@@ -189,6 +194,7 @@ export default function RecruitManager() {
         isActive: false,
         schedules: [{ title: '', type: 'application', startDate: '', endDate: '' }]
       });
+      setEditingId(null);
     } catch (error) {
       setError('일정 등록에 실패했습니다.');
     } finally {
@@ -224,6 +230,26 @@ export default function RecruitManager() {
 
     const format = (date) => date.replace(/-/g, '.');
     return `${format(recruitStartDate)} ~ ${format(recruitEndDate)}`;
+  };
+
+  const handleEdit = (recruit) => {
+    setFormData({
+      year: recruit.year,
+      season: '상반기',
+      recruitStartDate: recruit.recruitStartDate || '',
+      recruitEndDate: recruit.recruitEndDate || '',
+      isActive: recruit.isActive,
+      schedules:
+        recruit.schedules && recruit.schedules.length
+          ? recruit.schedules.map((s) => ({
+              title: s.title || '',
+              type: s.type || 'etc',
+              startDate: s.startDate || '',
+              endDate: s.endDate || '',
+            }))
+          : [{ title: '', type: 'application', startDate: '', endDate: '' }],
+    });
+    setEditingId(recruit._id);
   };
 
   return (
@@ -323,7 +349,13 @@ export default function RecruitManager() {
         </Button>
 
         <Button type="submit" disabled={loading}>
-          {loading ? '등록 중...' : '일정 등록'}
+          {loading
+            ? editingId
+              ? '수정 중...'
+              : '등록 중...'
+            : editingId
+            ? '일정 수정'
+            : '일정 등록'}
         </Button>
 
         {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -351,6 +383,12 @@ export default function RecruitManager() {
               </td>
               <td>{schedule.schedules.length}개</td>
               <td>
+                <Button
+                  type="button"
+                  onClick={() => handleEdit(schedule)}
+                >
+                  수정
+                </Button>
                 <Button
                   onClick={() => handleToggleActive(schedule._id, schedule.isActive)}
                 >

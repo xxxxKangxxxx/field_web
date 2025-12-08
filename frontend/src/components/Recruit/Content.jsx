@@ -173,7 +173,6 @@ export default function Content() {
   }, []);
 
   let recruitmentContent;
-  let recruitmentPeriod = null;
 
   if (isError) {
     recruitmentContent = (
@@ -187,24 +186,7 @@ export default function Content() {
   } else if (dateData && dateData.schedules && dateData.schedules.length > 0) {
     const formatDate = (date) => date.replace(/-/g, '.');
 
-    // 상단 큰 모집 일정: type === 'application'인 스케줄 우선 사용
-    const applicationSchedule = dateData.schedules.find(
-      (schedule) => schedule.type === 'application'
-    );
-
-    if (applicationSchedule && applicationSchedule.startDate) {
-      const periodText = applicationSchedule.endDate &&
-        applicationSchedule.endDate !== applicationSchedule.startDate
-        ? `${formatDate(applicationSchedule.startDate)} ~ ${formatDate(applicationSchedule.endDate)}`
-        : formatDate(applicationSchedule.startDate);
-
-      recruitmentPeriod = `${applicationSchedule.title}: ${periodText}`;
-    } else if (dateData.recruitStartDate && dateData.recruitEndDate) {
-      // fallback: 기존 top-level 모집 기간 필드 사용
-      recruitmentPeriod = `${formatDate(dateData.recruitStartDate)} ~ ${formatDate(dateData.recruitEndDate)}`;
-    }
-
-    // 하단 모집 일정 리스트
+    // 모집 일정 리스트
     recruitmentContent = (
       <>
         {dateData.schedules.map((schedule, index) => {
@@ -256,12 +238,6 @@ export default function Content() {
       <InfoGroup subtitle='😀 지원자격' content='산업공학을 주/복수/부전공하는 대학생' />
       <InfoGroupWithBox subtitle='💎 지원 방법' content={APPLYMETHOD} />
       <InfoGroup subtitle='📚 활동 기간' content='매년 3월 ~ 12월 (10개월)' />
-      {recruitmentPeriod && (
-        <InfoGroup
-          subtitle='📆 모집 기간'
-          content={recruitmentPeriod}
-        />
-      )}
       <InfoGroupWithBox subtitle='📆 모집 일정' content={recruitmentContent} />
     </>
   );
