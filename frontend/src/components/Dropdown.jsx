@@ -21,6 +21,7 @@ const DropdownButton = styled.button`
   background: transparent;
   border: 1px solid white;
   color: white;
+  font-size: 0.8rem;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -33,7 +34,7 @@ const DropdownButton = styled.button`
 
   ${theme.media.mobile} {
     padding: 12px;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
   }
 `;
 
@@ -56,6 +57,7 @@ const DropdownItem = styled.li`
   padding: 10px;
   color: white;
   cursor: pointer;
+  font-size: 0.9rem;
   min-height: 44px;
   display: flex;
   align-items: center;
@@ -66,7 +68,7 @@ const DropdownItem = styled.li`
 
   ${theme.media.mobile} {
     padding: 12px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 `;
 
@@ -74,9 +76,11 @@ const Arrow = styled.span`
   margin-left: 10px;
 `;
 
-function Dropdown({ title, titleArr }) {
+function Dropdown({ title, titleArr, placeholder }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedTitle, setSelectedTitle] = useState(titleArr[0]);
+  const [selectedTitle, setSelectedTitle] = useState(
+    placeholder || (titleArr && titleArr.length > 0 ? titleArr[0] : '')
+  );
   const dispatch = useDispatch();
 
   const toggleDropdown = useCallback(() => {
@@ -91,10 +95,15 @@ function Dropdown({ title, titleArr }) {
 
   const memoizedTitleArr = useMemo(() => titleArr, [titleArr]);
 
+  const displayLabel =
+    placeholder && selectedTitle === placeholder
+      ? placeholder
+      : `${selectedTitle} ${title}`;
+
   return (
     <DropdownContainer>
       <DropdownButton onClick={toggleDropdown}>
-        {selectedTitle} {title}
+        {displayLabel}
         <Arrow>{isOpen ? '▲' : '▼'}</Arrow>
       </DropdownButton>
       {isOpen && (

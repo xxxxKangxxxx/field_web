@@ -3,7 +3,7 @@ import {createSlice} from '@reduxjs/toolkit';
 export const campTitleSlice = createSlice({
   name: 'campTitle',
   initialState: {
-    value: 2024,
+    value: null,
   },
   reducers: {
     setCampTitle: (state, action) => {

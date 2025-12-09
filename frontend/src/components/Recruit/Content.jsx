@@ -102,19 +102,18 @@ const EligibilitySubText = styled.p`
 const EligibilityCards = styled.div`
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1.25rem;
-  width: 100%;
+  gap: 1rem;
 
   @media (min-width: 768px) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 1.75rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
   }
 `;
 
 const EligibilityCard = styled.div`
   background: rgba(255, 255, 255, 0.06);
   border-radius: 1.25rem;
-  padding: 1.75rem 1.5rem;
+  padding: 1.5rem 1.25rem;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 0 18px rgba(0, 0, 0, 0.45);
@@ -122,15 +121,9 @@ const EligibilityCard = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 0.75rem;
-  min-height: 160px;
-
-  @media (min-width: 768px) {
-    min-height: 190px;
-  }
 
   @media (min-width: 1024px) {
-    padding: 2.25rem 2rem;
-    min-height: 210px;
+    padding: 2rem 1.75rem;
   }
 `;
 

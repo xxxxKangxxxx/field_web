@@ -1,17 +1,16 @@
-import React, {useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useState, useRef, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import theme from '../../theme';
-import Button from '../Button';
-import {setCampTitle} from '../../redux/campTitleSlice';
 import Dropdown from '../Dropdown';
-import Timeline from '../TimeLine';
+import topic2025_1 from '../../assets/camp/FIELD_CAMP_주제1.jpg';
+import topic2025_2 from '../../assets/camp/FIELD_CAMP_주제2.jpg';
 
 const Section = styled.section`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin: 0 7.5%;
+  margin: 0 7.5% 12rem 7.5%;
   text-align: center;
   align-items: center;
   gap: 0.25rem;
@@ -36,27 +35,17 @@ const H2 = styled.h2`
 const Figure = styled.figure`
   display: flex;
   flex-direction: column;
-  justify-item: center;
   align-items: center;
-  opacity: 0;
-  transform: translateY(50px) scale(0.95);
-  transition: opacity 0.8s ease-out 0.4s, transform 0.8s ease-out 0.4s;
-
-  &.animate {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
 `;
 
 const Img = styled.img`
   width: 100%;
-  height: 100%;
+  height: auto;
   border-radius: 1rem;
   margin: 0 0 1.25rem 0;
-  order: 2;
+
   @media screen and (min-width: 1024px) {
-    width: 350px;
-    height: 350px;
+    width: 420px;
   }
 `;
 
@@ -66,68 +55,71 @@ const Figcaption = styled.figcaption`
   font-family: 'Goblin One';
   font-size: 1.25rem;
   margin: 0 0 1.25rem 0;
-  order: 1;
 `;
 
 const FigureWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 2rem;
+
   @media screen and (min-width: 1024px) {
     width: 100%;
-    display: flex;
-    justify-content: space-evenly;
+    flex-direction: row;
+    justify-content: center;
+    gap: 3rem;
   }
 `;
 
-// 캠프 데이터를 정적으로 정의
+const PreviewOverlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+`;
+
+const PreviewImage = styled.img`
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 1.25rem;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+`;
+
+// 현재는 2025 FIELD CAMP 데이터만 사용
 const CAMP_DATA = {
-  2024: {
-    year: 2024,
-    topic: '2024 주제 1',
-    description: '체크용',
-    location: 'KAIST',
-    participants: 208,
-    posterImage: '/camp_poster/2024.jpg',
-    timeline: [
-      { date: '2024.08.06', event: '이벤트1' }
-    ]
+  2025: {
+    year: 2025,
+    topics: [
+      {
+        id: 1,
+        label: '주제 1',
+        posterImage: topic2025_1,
+      },
+      {
+        id: 2,
+        label: '주제 2',
+        posterImage: topic2025_2,
+      },
+    ],
   },
-  2023: {
-    year: 2023,
-    topic: '2023 주제 1',
-    description: '2023년 FIELD CAMP 설명...',
-    location: 'KAIST',
-    participants: 200,
-    posterImage: '/camp_poster/2023.jpg',
-    timeline: [
-      { date: '2023.08.06', event: '이벤트1' }
-    ]
-  }
-  // 필요한 만큼 연도별 데이터 추가
 };
 
 function CampTopicSection() {
-  const [expandedIndex, setExpandedIndex] = useState(null);
   const [hasAnimated, setHasAnimated] = useState(false);
-  const sectionRef = React.useRef(null);
-  const h2Ref = React.useRef(null);
-  const figureRef = React.useRef(null);
+  const [previewSrc, setPreviewSrc] = useState(null);
+  const sectionRef = useRef(null);
+  const h2Ref = useRef(null);
   const campYear = useSelector(state => state.campTitle.value);
-  const dispatch = useDispatch();
 
-  // 컴포넌트 마운트 시 가장 최근 연도 선택
-  React.useEffect(() => {
-    const years = Object.keys(CAMP_DATA).map(Number).sort((a, b) => b - a);
-    if (years.length > 0 && (!campYear || !years.includes(campYear))) {
-      dispatch(setCampTitle(years[0]));
-    }
-  }, [dispatch, campYear]);
-
-  React.useEffect(() => {
+  useEffect(() => {
     const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting && !hasAnimated) {
             if (h2Ref.current) h2Ref.current.classList.add('animate');
-            if (figureRef.current) figureRef.current.classList.add('animate');
             setHasAnimated(true);
           }
         });
@@ -146,51 +138,45 @@ function CampTopicSection() {
     };
   }, [hasAnimated]);
 
-  const toggleImageDisplay = index => {
-    setExpandedIndex(prevIndex => (prevIndex === index ? null : index));
-  };
-
-  const currentCamp = CAMP_DATA[campYear];
+  const currentCamp = campYear ? CAMP_DATA[campYear] : null;
   const years = Object.keys(CAMP_DATA).map(Number).sort((a, b) => b - a);
-
-  if (!currentCamp) {
-    return <div>데이터를 찾을 수 없습니다.</div>;
-  }
 
   return (
     <Section ref={sectionRef}>
-      <H2 ref={h2Ref}>역대 FIELD CAMP</H2>
-      <Dropdown title='FIELD CAMP' titleArr={years} />
-      <FigureWrapper>
-        <div>
-          <Figure ref={figureRef}>
-            <Img 
-              src={currentCamp.posterImage}
-              alt={`${currentCamp.year} FIELD CAMP 포스터`} 
-            />
-            <Figcaption $color={currentCamp.topic === '1st' ? 'red' : 'blue'}>
-              {currentCamp.topic} TOPIC
-            </Figcaption>
-            <Button
-              onClick={() => toggleImageDisplay(0)}
-              label={expandedIndex === 0 ? '상세 정보 접기' : '상세 정보 펼치기'}
-              order='3'
-              mg='0 0 2rem 0'
-            />
-          </Figure>
-          {expandedIndex === 0 && (
-            <div>
-              <h3>{currentCamp.year}년 FIELD CAMP</h3>
-              <p>{currentCamp.description}</p>
-              <p>장소: {currentCamp.location}</p>
-              <p>참가자: {currentCamp.participants}명</p>
-              {currentCamp.timeline && <Timeline events={currentCamp.timeline} />}
-            </div>
-          )}
-        </div>
-      </FigureWrapper>
+      <H2 ref={h2Ref}>FIELD CAMP 주제 살펴보기</H2>
+      <Dropdown title='FIELD CAMP' titleArr={years} placeholder='선택' />
+      {currentCamp && (
+        <FigureWrapper>
+          {currentCamp.topics.map((topic, index) => (
+            <Figure key={topic.id}>
+              <Figcaption>{topic.label}</Figcaption>
+              <Img
+                src={topic.posterImage}
+                alt={`${currentCamp.year} FIELD CAMP ${topic.label} 포스터`}
+                style={{ cursor: 'pointer' }}
+                onClick={() => setPreviewSrc(topic.posterImage)}
+              />
+            </Figure>
+          ))}
+        </FigureWrapper>
+      )}
+      {previewSrc && (
+        <PreviewOverlay
+          onClick={() => {
+            setPreviewSrc(null);
+          }}
+        >
+          <PreviewImage
+            src={previewSrc}
+            alt='FIELD CAMP 포스터 확대 보기'
+            onClick={e => e.stopPropagation()}
+          />
+        </PreviewOverlay>
+      )}
     </Section>
   );
 }
 
 export default CampTopicSection;
+
+
