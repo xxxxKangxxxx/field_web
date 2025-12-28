@@ -342,27 +342,23 @@ const NewsDetail = () => {
                  MANAGER_POSITIONS_LIST.includes(auth?.user?.position);
 
   useEffect(() => {
-    if (!auth.isAuthenticated || !auth.token) {
-      navigate('/login');
-      return;
-    }
-
     const fetchNews = async () => {
       try {
         const response = await api.get(`/api/news/${id}`);
         setNews(response.data);
       } catch (error) {
-        if (error.response?.status === 401) {
-          alert('로그인이 필요합니다.');
-          navigate('/login');
+        if (error.response?.status === 404) {
+          alert('존재하지 않는 뉴스입니다.');
+          navigate('/news');
         } else {
+          console.error('뉴스를 불러오는 중 오류가 발생했습니다:', error);
           navigate('/news');
         }
       }
     };
 
     fetchNews();
-  }, [id, navigate, auth.isAuthenticated, auth.token]);
+  }, [id, navigate]);
 
   // ESC 키로 모달 닫기
   useEffect(() => {
@@ -384,12 +380,6 @@ const NewsDetail = () => {
   }, [isImageModalOpen]);
 
   const handleDelete = async () => {
-    if (!auth.isAuthenticated || !auth.token) {
-      alert('로그인이 필요합니다.');
-      navigate('/login');
-      return;
-    }
-
     if (!isAdmin) {
       alert('삭제 권한이 없습니다.');
       return;
