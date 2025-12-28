@@ -14,6 +14,14 @@ const MenuBar = styled.div`
   top: 0;
   z-index: 9999;
   background: ${props => {
+    if (props.$isSemiTransparent) {
+      return 'rgba(20, 20, 20, 0.8)';
+    }
+    if (props.$isDarkToSemi) {
+      return props.$isScrolled 
+        ? 'rgba(20, 20, 20, 0.8)' 
+        : '#141414';
+    }
     if (props.$isTransparentHeader) {
       return props.$isScrolled 
         ? 'rgba(20, 20, 20, 0.8)' 
@@ -21,12 +29,22 @@ const MenuBar = styled.div`
     }
     return '#141414';
   }};
-  backdrop-filter: ${props => 
-    props.$isTransparentHeader && props.$isScrolled ? 'blur(5px)' : 'none'};
+  backdrop-filter: ${props => {
+    if (props.$isSemiTransparent) return 'blur(5px)';
+    if (props.$isDarkToSemi && props.$isScrolled) return 'blur(5px)';
+    if (props.$isTransparentHeader && props.$isScrolled) return 'blur(5px)';
+    return 'none';
+  }};
   transition: all 0.3s ease;
 
   &:hover {
     background: ${props => {
+      if (props.$isSemiTransparent) {
+        return 'rgba(20, 20, 20, 0.85)';
+      }
+      if (props.$isDarkToSemi) {
+        return props.$isScrolled ? 'rgba(20, 20, 20, 0.85)' : 'rgba(20, 20, 20, 0.9)';
+      }
       if (props.$isTransparentHeader && !props.$isScrolled) {
         return 'rgba(20, 20, 20, 0.2)';
       }
@@ -504,8 +522,14 @@ export default function Header() {
   const myPageRef = useRef(null);
   const scrollPositionRef = useRef(0);
   
-  const transparentHeaderPages = ['/', '/about', '/camp', '/recruit'];
+  const transparentHeaderPages = ['/', '/about', '/camp'];
+  const semiTransparentHeaderPages = ['/recruit'];
+  const darkToSemiPages = ['/news', '/contact'];
+  
   const isTransparentHeader = transparentHeaderPages.includes(location.pathname);
+  const isSemiTransparentHeader = semiTransparentHeaderPages.includes(location.pathname);
+  const isDarkToSemiHeader = darkToSemiPages.includes(location.pathname) || 
+                            location.pathname.startsWith('/news/');
 
   const isActivePath = (path) => {
     if (path === '/') {
@@ -515,7 +539,7 @@ export default function Header() {
   };
 
   useEffect(() => {
-    if (!isTransparentHeader) return;
+    if (!isTransparentHeader && !isDarkToSemiHeader && !isSemiTransparentHeader) return;
     
     const handleScroll = () => {
       if (window.scrollY > 50) {
@@ -529,7 +553,7 @@ export default function Header() {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [isTransparentHeader]);
+  }, [isTransparentHeader, isDarkToSemiHeader, isSemiTransparentHeader]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -746,7 +770,13 @@ export default function Header() {
   };
 
   return (
-    <MenuBar as="header" $isTransparentHeader={isTransparentHeader} $isScrolled={isScrolled}>
+    <MenuBar 
+      as="header" 
+      $isTransparentHeader={isTransparentHeader}
+      $isSemiTransparent={isSemiTransparentHeader}
+      $isDarkToSemi={isDarkToSemiHeader}
+      $isScrolled={isScrolled}
+    >
       <MainHeaderWrapper>
         {HomeDirection}
         <MenuButton aria-label='MenuButton' onClick={() => setIsMenuOpen(!isMenuOpen)}>
